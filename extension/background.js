@@ -47,8 +47,16 @@ socket.on('pause',(data) => {
 })
 
 
-socket.on('syncVideo',(duration) => {
+socket.on('syncVideo',(data) => {
+    duration = data[0]
+    isPaused = data[1]
     chrome.tabs.executeScript(null,{code:`var videoElements = document.querySelectorAll('video')[0]; videoElements.currentTime = ${duration}`})
+    if (isPaused){
+        chrome.tabs.executeScript(null,{code:`var videoElements = document.querySelectorAll('video')[0]; videoElements.pause()`})
+    }else{
+        chrome.tabs.executeScript(null,{code:`var videoElements = document.querySelectorAll('video')[0]; videoElements.play()`})
+    }
+        
     // chrome.tabs.executeScript(null,{file:'./setDuration.js'})
 })
 

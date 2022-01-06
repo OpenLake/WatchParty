@@ -46,8 +46,8 @@ pauseButton.addEventListener('click',() => {
 })
 
 syncButton.addEventListener('click',() => {
-    chrome.tabs.executeScript(null,{file:"./getDuration.js"},(duration) => {
-        chrome.runtime.sendMessage({event:'syncVideo',data:duration})
+    chrome.tabs.executeScript(null,{file:"./getDuration.js"},(data) => {
+        chrome.runtime.sendMessage({event:'syncVideo',data:data})
     });
 
 })
