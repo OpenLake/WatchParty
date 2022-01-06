@@ -22,8 +22,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
             chrome.runtime.sendMessage({event:"checkAlive",data:'New Connection'})
         }
 
-    }else if (message.event === "pause"){
-        socket.emit('pause',userData)
+    // }else if (message.event === "pause"){
+    //     socket.emit('pause',userData)
 
     }else if (message.event === "syncVideo"){
         socket.emit('syncVideo',[userData,message.data])
@@ -41,10 +41,10 @@ socket.on('leftRoom',(data) => {
     chrome.runtime.sendMessage({event:'leftRoom',data:data});
 })
 
-socket.on('pause',(data) => {
-    // chrome.runtime.sendMessage({event:'pause',data:''});
-    chrome.tabs.executeScript(null,{file:"./pause.js"});
-})
+// socket.on('pause',(data) => {
+//     // chrome.runtime.sendMessage({event:'pause',data:''});
+//     chrome.tabs.executeScript(null,{file:"./pause.js"});
+// })
 
 
 socket.on('syncVideo',(data) => {

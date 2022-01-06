@@ -6,15 +6,15 @@ const roomID = document.getElementById('roomID')
 const button = document.getElementById('joinButton')
 const output = document.getElementById('output')
 
-const pauseButton = document.getElementById('pauseButton')
+// const pauseButton = document.getElementById('pauseButton')
 const syncButton = document.getElementById('syncButton')
 
-function pauseVideo(){
-    var videoElements = document.querySelectorAll('video');
-    for (i = 0; i < videoElements.length; i++) {
-        videoElements[i].pause();
-    }
-}
+// function pauseVideo(){
+//     var videoElements = document.querySelectorAll('video');
+//     for (i = 0; i < videoElements.length; i++) {
+//         videoElements[i].pause();
+//     }
+// }
 
 chrome.runtime.sendMessage({event:'checkAlive',data:null})
 
@@ -40,10 +40,10 @@ button.addEventListener('click', () => {
     
 })
 
-pauseButton.addEventListener('click',() => {
-    chrome.tabs.executeScript(null,{file:"./pause.js"});
-    chrome.runtime.sendMessage({event:"pause",data:''});
-})
+// pauseButton.addEventListener('click',() => {
+//     chrome.tabs.executeScript(null,{file:"./pause.js"});
+//     chrome.runtime.sendMessage({event:"pause",data:''});
+// })
 
 syncButton.addEventListener('click',() => {
     chrome.tabs.executeScript(null,{file:"./getDuration.js"},(data) => {
