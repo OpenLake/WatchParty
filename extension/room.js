@@ -7,6 +7,7 @@ const button = document.getElementById('joinButton')
 const output = document.getElementById('output')
 
 const pauseButton = document.getElementById('pauseButton')
+const syncButton = document.getElementById('syncButton')
 
 function pauseVideo(){
     var videoElements = document.querySelectorAll('video');
@@ -44,6 +45,12 @@ pauseButton.addEventListener('click',() => {
     chrome.runtime.sendMessage({event:"pause",data:''});
 })
 
+syncButton.addEventListener('click',() => {
+    chrome.tabs.executeScript(null,{file:"./getDuration.js"},(duration) => {
+        chrome.runtime.sendMessage({event:'syncVideo',data:duration})
+    });
+
+})
 
 // socket.on('joinRoom',(data) =>{
 //     output.innerHTML = `<p>${data}</p>`

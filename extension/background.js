@@ -2,12 +2,9 @@ var socket = io.connect('http://localhost:4000')
 
 // chrome.runtime.onMessage.addListener(messageReceived);
 
-function messageReceived(msg) {
-   alert('hi')
-}
-
 var existingConnection = false;
 var userData = {}
+
 chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
     if (message.event === "joinRoom"){
@@ -27,6 +24,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
     }else if (message.event === "pause"){
         socket.emit('pause',userData)
+
+    }else if (message.event === "syncVideo"){
+        socket.emit('syncVideo',[userData,message.data])
     }
 })
 
@@ -44,6 +44,12 @@ socket.on('leftRoom',(data) => {
 socket.on('pause',(data) => {
     // chrome.runtime.sendMessage({event:'pause',data:''});
     chrome.tabs.executeScript(null,{file:"./pause.js"});
+})
+
+
+socket.on('syncVideo',(duration) => {
+    chrome.tabs.executeScript(null,{code:`var videoElements = document.querySelectorAll('video')[0]; videoElements.currentTime = ${duration}`})
+    // chrome.tabs.executeScript(null,{file:'./setDuration.js'})
 })
 
 // socket.on('hostName',(data) => {

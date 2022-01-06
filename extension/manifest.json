@@ -5,7 +5,7 @@
     "browser_action": {
         "default_popup": "popup.html"
     },
-    "permissions": ["tabs","https://www.youtube.com/*","activeTab"],
+    "permissions": ["tabs","https://www.youtube.com/*","activeTab","https://www.w3schools.com/*"],
     "background": {
     	"page": "background.html",
         "persistent": true
