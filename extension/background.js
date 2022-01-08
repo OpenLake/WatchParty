@@ -5,6 +5,8 @@ var socket = io.connect('http://localhost:4000')
 var existingConnection = false;
 var userData = {}
 
+var user_list = {}
+
 chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
     if (message.event === "joinRoom"){
@@ -17,9 +19,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
     
     }else if (message.event === "checkAlive"){
         if (existingConnection){
-            chrome.runtime.sendMessage({event:"checkAlive",data:`Welcome back ${userData.username}`})
+            // chrome.runtime.sendMessage({event:"checkAlive",data:`Welcome back ${userData.username}`})
+            chrome.runtime.sendMessage({event:"checkAlive",data:{userData:userData,users:user_list}})
         }else{
-            chrome.runtime.sendMessage({event:"checkAlive",data:'New Connection'})
+            chrome.runtime.sendMessage({event:"checkAlive",data:''})
         }
 
     // }else if (message.event === "pause"){
@@ -31,8 +34,10 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 })
 
 
-socket.on('joinRoom',(data) =>{
-    chrome.runtime.sendMessage({event:'joinRoom',data:data});
+socket.on('joinRoom',(users) =>{
+    // userData.dispData += data;
+    chrome.runtime.sendMessage({event:'joinRoom',data:{userData:userData,users:users}});
+    user_list = users
 })
 
 

@@ -29,12 +29,20 @@ button.addEventListener('click', () => {
 
 
 chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
-    if (message.event === "joinRoom"){
-        output.innerHTML = message.data
+    if (message.event === "joinRoom" || message.event === "checkAlive"){
+
+        userData = message.data.userData
+        users = message.data.users
+        output.innerHTML = `<p>Hello, <b>${userData.username}</b></p><br>`
+
+        output.innerHTML += `<p>Users in party: </p>`
+        // output.innerHTML += `<p>${JSON.stringify(users)}</p>`
+        for (i = 0; i < users.length; ++i){
+            output.innerHTML += `<p>${users[i].username}</p><br>`
+        }
+
     }else if (message.event === "leftRoom"){
         output.innerHTML += message.data
-    }else if (message.event === "checkAlive"){
-        output.innerHTML = message.data
     }
 
 })
