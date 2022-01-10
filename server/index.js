@@ -2,7 +2,7 @@ var express = require('express')
 var socket = require('socket.io')
 var cors = require('cors')
 
-const { addUser,getHostName, getHostUserID } = require('./utils/room')
+const { addUser,getHostName, getHostUserID, getUsers,removeUser } = require('./utils/room')
 
 var app = express()
 app.use(cors())
@@ -25,20 +25,32 @@ var io = socket(server, {
 
 io.on('connection', (socket) => {
     console.log(`Connection made to socket id ${socket.id}`)
+    // console.log(getUsers(roomID))
 
         socket.on('joinRoom',({ username,roomID }) => {
 
-            console.log('Someone joined room')
+            console.log(`${username} joined room ${roomID}`)
             socket.join(roomID)
             addUser({ username:username,roomID:roomID, userID:socket.id })
-            socket.emit('joinRoom',`Connected to room<br><b>${getHostName(roomID)}</b> is the host`)
-            socket.broadcast.to(roomID).emit('joinRoom',`<b>${username}</b> has joined the party`)
+            socket.emit('joinRoom',getUsers(roomID))
+            socket.broadcast.to(roomID).emit('joinRoom',getUsers(roomID))
             io.to(getHostUserID(roomID)).emit('hostName', getHostUserID(roomID));
 
+            // console.log(getUsers(roomID))
             // This listener is nested inside a listener
             
             socket.on('disconnect',() => {
-                socket.broadcast.to(roomID).emit('leftRoom',`<b>${username}</b> has left the party`)
+                console.log(`${username} has left the room(Socket Disconnected)`)
+                removeUser({username, roomID})
+                socket.broadcast.to(roomID).emit('leaveRoom',getUsers(roomID))
+            })
+
+
+            socket.on('leaveRoom',(userData) => {
+                console.log(`${userData.username} has left the room ${userData.roomID}`)
+                removeUser(userData)
+                socket.broadcast.to(roomID).emit('leaveRoom',getUsers(roomID))
+                // console.log(getUsers(roomID))
             })
             
             // socket.on('pause',(userData) => {
@@ -62,6 +74,16 @@ io.on('connection', (socket) => {
                     socket.broadcast.to(roomID).emit('syncVideo',[duration,isPaused])
                 }
                 // socket.broadcast.to(roomID).emit('syncVideo',data)
+            })
+
+            socket.on('sendMessage', (data) => {
+                username = data.userData.username
+                roomID = data.userData.roomID
+                message = data.message
+
+                console.log(`${username} says ${message} in room ${roomID}`)
+                socket.broadcast.to(roomID).emit('sendMessage',{username:username,message:message})
+
             })
 
 
