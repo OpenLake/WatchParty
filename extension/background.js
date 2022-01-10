@@ -45,6 +45,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
     else if(message.event === 'fetchMessages'){
         chrome.runtime.sendMessage({event:'sendMessage',data:chatData});
     }
+
+    else if (message.event === 'setVideoState'){
+        chrome.tabs.executeScript(null,{file:'./getDuration.js'},(data) => {
+            var time = data[0][0]
+            var isPaused = data[0][1]
+            socket.emit('syncVideo',[userData,[time,isPaused]])
+        })
+    }
 })
 
 

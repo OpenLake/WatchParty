@@ -22,6 +22,7 @@ const usersBox = document.getElementById('usersBox')
 
 const innerChatBox = document.getElementById('innerChatBox')
 
+const syncButton = document.getElementById('syncButton')
 
 
 // When the popup window is reopened
@@ -55,7 +56,11 @@ chatButton.addEventListener('click', () => {
     chrome.runtime.sendMessage({event:"fetchMessages",data:''});
 })
 
-
+syncButton.addEventListener('click', () => {
+    // chrome.runtime.sendMessage({event:"getVideoState",data:''});
+    chrome.runtime.sendMessage({event:"setVideoState",data:''})
+    // chrome.tabs.executeScript(null,{code:'./getDuration'})
+})
 
 
 // Event listeners from the background.js script
@@ -76,6 +81,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
             }
         }
         usersBox.innerHTML += '</ul>'
+
+        chrome.runtime.sendMessage({event:"setVideoState",data:''})
 
     }
     
