@@ -8,10 +8,9 @@ var app = express()
 app.use(cors())
 
 const PORT = process.env.PORT || 4000
-const IP = process.env.IP || '0.0.0.0'
 
-var server = app.listen(PORT,IP,() => {
-    console.log(`Listening to requests on port ${PORT} at ${IP}`)
+var server = app.listen(PORT,() => {
+    console.log(`Listening to requests on port ${PORT}`)
 })
 
 app.get('/hello', (req, res) => {
