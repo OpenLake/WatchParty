@@ -7,8 +7,11 @@ const { addUser,getHostName, getHostUserID, getUsers,removeUser } = require('./u
 var app = express()
 app.use(cors())
 
-var server = app.listen(4000,() => {
-    console.log('Listening to requests on port 4000')
+const PORT = process.env.PORT || 4000
+const IP = process.env.IP || '0.0.0.0'
+
+var server = app.listen(PORT,IP,() => {
+    console.log(`Listening to requests on port ${PORT} at ${IP}`)
 })
 
 app.get('/hello', (req, res) => {
@@ -43,6 +46,7 @@ io.on('connection', (socket) => {
                 console.log(`${username} has left the room(Socket Disconnected)`)
                 removeUser({username, roomID})
                 socket.broadcast.to(roomID).emit('leaveRoom',getUsers(roomID))
+                socket.leave(roomID)
             })
 
 
@@ -50,6 +54,7 @@ io.on('connection', (socket) => {
                 console.log(`${userData.username} has left the room ${userData.roomID}`)
                 removeUser(userData)
                 socket.broadcast.to(roomID).emit('leaveRoom',getUsers(roomID))
+                socket.leave(roomID)
                 // console.log(getUsers(roomID))
             })
             
