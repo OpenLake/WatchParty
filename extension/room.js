@@ -1,6 +1,3 @@
-var socket = io.connect('http://localhost:4000')
-
-
 const username = document.getElementById('username')
 const roomID = document.getElementById('roomID')
 const button = document.getElementById('joinButton')

@@ -1,4 +1,5 @@
-var socket = io.connect('http://localhost:4000')
+// var socket = io.connect('http://localhost:4000')
+var socket = io.connect('https://mighty-bastion-46654.herokuapp.com/')
 
 var existingConnection = false;
 var userData = {}
