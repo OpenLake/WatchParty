@@ -7,6 +7,11 @@ const { addUser,getHostName, getHostUserID, getUsers,removeUser } = require('./u
 var app = express()
 app.use(cors())
 
+app.set('view engine','ejs')
+app.get('/', (req,res) => {
+    res.render('index');
+});
+
 const PORT = process.env.PORT || 4000
 
 var server = app.listen(PORT,() => {
