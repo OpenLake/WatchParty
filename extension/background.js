@@ -35,6 +35,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
     else if (message.event === "leaveRoom"){
         socket.emit('leaveRoom',userData)
+        chatData = []
         existingConnection = false;
     }
 
