@@ -32,7 +32,6 @@ var io = socket(server, {
 
 io.on('connection', (socket) => {
     console.log(`Connection made to socket id ${socket.id}`)
-    // console.log(getUsers(roomID))
 
         socket.on('joinRoom',({ username,roomID }) => {
 
@@ -42,8 +41,6 @@ io.on('connection', (socket) => {
             socket.emit('joinRoom',getUsers(roomID))
             socket.broadcast.to(roomID).emit('joinRoom',getUsers(roomID))
             io.to(getHostUserID(roomID)).emit('hostName', getHostUserID(roomID));
-
-            // console.log(getUsers(roomID))
             // This listener is nested inside a listener
             
             socket.on('disconnect',() => {
@@ -59,30 +56,20 @@ io.on('connection', (socket) => {
                 removeUser(userData)
                 socket.broadcast.to(roomID).emit('leaveRoom',getUsers(roomID))
                 socket.leave(roomID)
-                // console.log(getUsers(roomID))
             })
             
-            // socket.on('pause',(userData) => {
-            //     console.log(`Pause request from ${userData.username}`)
-            //     if (getHostName(userData.roomID) === userData.username){
-            //         socket.broadcast.to(roomID).emit('pause',`pause the video`)
-            //     }
-            // })
 
             socket.on('syncVideo',(data) => {
                 // Only host can sync video
                 
                 userData = data[0]
                 lst = data[1]
-                // duration = lst[0][0]
-                // isPaused = lst[0][1]
                 duration = lst[0]
                 isPaused = lst[1]
                 console.log(`sync req from ${userData.username} ${lst[1]}`)
                 if (getHostName(userData.roomID) === userData.username){
                     socket.broadcast.to(roomID).emit('syncVideo',[duration,isPaused])
                 }
-                // socket.broadcast.to(roomID).emit('syncVideo',data)
             })
 
             socket.on('sendMessage', (data) => {

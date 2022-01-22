@@ -2,31 +2,31 @@ const username = document.getElementById('username')
 const roomID = document.getElementById('roomID')
 const button = document.getElementById('joinButton')
 const output = document.getElementById('output')
+
 const leaveButton = document.getElementById('leaveButton')
 const usersButton = document.getElementById('usersButton')
 const chatButton = document.getElementById('chatButton')
 const sendButton = document.getElementById('sendButton')
+const syncButton = document.getElementById('syncButton')
+
+const chatBox = document.getElementById('chatBox')
+const messageBox = document.getElementById('message')
+const usersBox = document.getElementById('usersBox')
+const innerChatBox = document.getElementById('innerChatBox')
+const socketStatus = document.getElementById('socket_status')
 
 var usersHTML = ''
 var chatHTML = ''
-
-const chatBox = document.getElementById('chatBox')
 chatBox.style.display = 'none'
-const messageBox = document.getElementById('message')
 
-const usersBox = document.getElementById('usersBox')
-
-
-const innerChatBox = document.getElementById('innerChatBox')
-
-const syncButton = document.getElementById('syncButton')
 
 
 // When the popup window is reopened
 chrome.runtime.sendMessage({event:'checkAlive',data:null})
 
-// Event listeners for buttons
 
+
+// Event listeners for buttons
 button.addEventListener('click', () => {
     chrome.runtime.sendMessage({event:"joinRoom",data:{username:username.value,roomID:roomID.value}});
 })
@@ -54,13 +54,11 @@ chatButton.addEventListener('click', () => {
 })
 
 syncButton.addEventListener('click', () => {
-    // chrome.runtime.sendMessage({event:"getVideoState",data:''});
     chrome.runtime.sendMessage({event:"setVideoState",data:''})
-    // chrome.tabs.executeScript(null,{code:'./getDuration'})
 })
 
 
-// Event listeners from the background.js script
+// Event listeners for the background.js script
 
 chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
@@ -105,6 +103,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
             innerChatBox.innerHTML += `<p><b>${chatData[i].username}</b>: ${chatData[i].message}</p>`
         }
 
+    }
+
+    else if (message.event === "socketStatus"){
+        if (message.data == true){
+            socketStatus.innerHTML = '<span class="badge alert-success" style="display:inline">Connected to server</span>'
+        }else{
+            socketStatus.innerHTML = '<span class="badge alert-success" style="display:inline;color:red"> Not Connected to server</span>'
+        }
     }
 
 })

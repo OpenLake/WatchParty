@@ -1,4 +1,5 @@
-// var socket = io.connect('http://localhost:4000')
+// This script runs in the background, even when the extension popup is not open
+
 var socket = io.connect('https://watchpartyserver.herokuapp.com/')
 
 var existingConnection = false;
@@ -6,10 +7,19 @@ var userData = {}
 var user_list = {}
 var chatData = []
 
+function checkStatus(){
+    if (socket.connected){
+        chrome.runtime.sendMessage({event:'socketStatus',data:true});
+    }else{
+        chrome.runtime.sendMessage({event:'socketStatus',data:false});
+    }    
+}
 
 chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
     if (message.event === "joinRoom"){
+        checkStatus()
+   
         if (existingConnection){
             alert('You are already in a room')
         }else{
@@ -22,6 +32,8 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
         }
         
     }else if (message.event === "checkAlive"){
+        checkStatus()
+  
         if (existingConnection){
             chrome.runtime.sendMessage({event:"checkAlive",data:{userData:userData,users:user_list}})
         }else{
@@ -90,5 +102,3 @@ socket.on('sendMessage', (data) => {
     chatData.push({username:username,message:message})
     chrome.runtime.sendMessage({event:'sendMessage',data:chatData});
 })
-
-
