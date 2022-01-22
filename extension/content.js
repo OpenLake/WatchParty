@@ -1,3 +1,5 @@
+// This content script is injected to the webpage for listening button click events
+
 
 var pause_play = document.getElementsByClassName('ytp-play-button ytp-button')[0]
 var progress_bar = document.getElementsByClassName('ytp-progress-bar')[0]

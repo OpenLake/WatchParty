@@ -2,24 +2,23 @@ const username = document.getElementById('username')
 const roomID = document.getElementById('roomID')
 const button = document.getElementById('joinButton')
 const output = document.getElementById('output')
+
 const leaveButton = document.getElementById('leaveButton')
 const usersButton = document.getElementById('usersButton')
 const chatButton = document.getElementById('chatButton')
 const sendButton = document.getElementById('sendButton')
+const syncButton = document.getElementById('syncButton')
+
+const chatBox = document.getElementById('chatBox')
+const messageBox = document.getElementById('message')
+const usersBox = document.getElementById('usersBox')
+const innerChatBox = document.getElementById('innerChatBox')
+const socketStatus = document.getElementById('socket_status')
 
 var usersHTML = ''
 var chatHTML = ''
-
-const chatBox = document.getElementById('chatBox')
 chatBox.style.display = 'none'
-const messageBox = document.getElementById('message')
 
-const usersBox = document.getElementById('usersBox')
-
-
-const innerChatBox = document.getElementById('innerChatBox')
-
-const syncButton = document.getElementById('syncButton')
 
 const socketStatus = document.getElementById('socket_status')
 
@@ -28,8 +27,9 @@ const socketStatus = document.getElementById('socket_status')
 // When the popup window is reopened
 chrome.runtime.sendMessage({event:'checkAlive',data:null})
 
-// Event listeners for buttons
 
+
+// Event listeners for buttons
 button.addEventListener('click', () => {
     chrome.runtime.sendMessage({event:"joinRoom",data:{username:username.value,roomID:roomID.value}});
 })
@@ -61,7 +61,7 @@ syncButton.addEventListener('click', () => {
 })
 
 
-// Event listeners from the background.js script
+// Event listeners for the background.js script
 
 chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 

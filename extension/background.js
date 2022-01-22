@@ -1,4 +1,5 @@
-// var socket = io.connect('http://localhost:4000')
+// This script runs in the background, even when the extension popup is not open
+
 var socket = io.connect('https://watchpartyserver.herokuapp.com/')
 
 var existingConnection = false;
@@ -99,5 +100,3 @@ socket.on('sendMessage', (data) => {
     chatData.push({username:username,message:message})
     chrome.runtime.sendMessage({event:'sendMessage',data:chatData});
 })
-
-
