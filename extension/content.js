@@ -12,14 +12,3 @@ progress_bar.addEventListener('click',() => {
     var videoElements = document.querySelectorAll('video')[0];
     chrome.runtime.sendMessage({event:"syncVideo",data:[videoElements.currentTime,videoElements.paused]})
 })
-
-
-// chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
-
-//     if (message.event === "getVideoState"){
-//         document.body.style.backgroundColor='yellow'
-//         var videoElements = document.querySelectorAll('video')[0];
-//         chrome.runtime.sendMessage({event:"syncVideo",data:[videoElements.currentTime,videoElements.paused]})
-//     }
-    
-// })

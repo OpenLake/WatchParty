@@ -21,6 +21,9 @@ const innerChatBox = document.getElementById('innerChatBox')
 
 const syncButton = document.getElementById('syncButton')
 
+const socketStatus = document.getElementById('socket_status')
+
+
 
 // When the popup window is reopened
 chrome.runtime.sendMessage({event:'checkAlive',data:null})
@@ -54,9 +57,7 @@ chatButton.addEventListener('click', () => {
 })
 
 syncButton.addEventListener('click', () => {
-    // chrome.runtime.sendMessage({event:"getVideoState",data:''});
     chrome.runtime.sendMessage({event:"setVideoState",data:''})
-    // chrome.tabs.executeScript(null,{code:'./getDuration'})
 })
 
 
@@ -105,6 +106,14 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
             innerChatBox.innerHTML += `<p><b>${chatData[i].username}</b>: ${chatData[i].message}</p>`
         }
 
+    }
+
+    else if (message.event === "socketStatus"){
+        if (message.data == true){
+            socketStatus.innerHTML = '<span class="badge alert-success" style="display:inline">Connected to server</span>'
+        }else{
+            socketStatus.innerHTML = '<span class="badge alert-success" style="display:inline;color:red"> Not Connected to server</span>'
+        }
     }
 
 })

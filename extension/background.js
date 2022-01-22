@@ -6,10 +6,18 @@ var userData = {}
 var user_list = {}
 var chatData = []
 
+function checkStatus(){
+    if (socket.connected){
+        chrome.runtime.sendMessage({event:'socketStatus',data:true});
+    }else{
+        chrome.runtime.sendMessage({event:'socketStatus',data:false});
+    }    
+}
 
 chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
     if (message.event === "joinRoom"){
+        checkStatus()
         if (existingConnection){
             alert('You are already in a room')
         }else{
@@ -22,6 +30,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
         }
         
     }else if (message.event === "checkAlive"){
+        checkStatus()
         if (existingConnection){
             chrome.runtime.sendMessage({event:"checkAlive",data:{userData:userData,users:user_list}})
         }else{
