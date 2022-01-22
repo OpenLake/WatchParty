@@ -1,50 +1,85 @@
-var socket = io.connect('http://localhost:4000')
+// This script runs in the background, even when the extension popup is not open
 
-// chrome.runtime.onMessage.addListener(messageReceived);
+var socket = io.connect('https://watchpartyserver.herokuapp.com/')
 
 var existingConnection = false;
 var userData = {}
+var user_list = {}
+var chatData = []
+
+function checkStatus(){
+    if (socket.connected){
+        chrome.runtime.sendMessage({event:'socketStatus',data:true});
+    }else{
+        chrome.runtime.sendMessage({event:'socketStatus',data:false});
+    }    
+}
 
 chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
     if (message.event === "joinRoom"){
-        existingConnection = true;
-        userData = {
-            username:message.data.username,
-            roomID:message.data.roomID
-        }
-        socket.emit('joinRoom',userData)
-    
-    }else if (message.event === "checkAlive"){
+        checkStatus()
+   
         if (existingConnection){
-            chrome.runtime.sendMessage({event:"checkAlive",data:`Welcome back ${userData.username}`})
+            alert('You are already in a room')
         }else{
-            chrome.runtime.sendMessage({event:"checkAlive",data:'New Connection'})
+            existingConnection = true;
+            userData = {
+                username:message.data.username,
+                roomID:message.data.roomID
+            }
+            socket.emit('joinRoom',userData)
+        }
+        
+    }else if (message.event === "checkAlive"){
+        checkStatus()
+  
+        if (existingConnection){
+            chrome.runtime.sendMessage({event:"checkAlive",data:{userData:userData,users:user_list}})
+        }else{
+            chrome.runtime.sendMessage({event:"checkAlive",data:''})
         }
 
-    // }else if (message.event === "pause"){
-    //     socket.emit('pause',userData)
 
     }else if (message.event === "syncVideo"){
         socket.emit('syncVideo',[userData,message.data])
     }
+
+    else if (message.event === "leaveRoom"){
+        socket.emit('leaveRoom',userData)
+        chatData = []
+        existingConnection = false;
+    }
+
+    else if (message.event === 'sendMessage'){
+        chatData.push({username:userData.username,message:message.data})
+        socket.emit('sendMessage',{userData:userData,message:message.data})
+    }
+
+    else if(message.event === 'fetchMessages'){
+        chrome.runtime.sendMessage({event:'sendMessage',data:chatData});
+    }
+
+    else if (message.event === 'setVideoState'){
+        chrome.tabs.executeScript(null,{file:'./getDuration.js'},(data) => {
+            var time = data[0][0]
+            var isPaused = data[0][1]
+            socket.emit('syncVideo',[userData,[time,isPaused]])
+        })
+    }
 })
 
 
-socket.on('joinRoom',(data) =>{
-    chrome.runtime.sendMessage({event:'joinRoom',data:data});
+socket.on('joinRoom',(users) =>{
+    chrome.runtime.sendMessage({event:'joinRoom',data:{userData:userData,users:users}});
+    user_list = users
 })
 
 
 
-socket.on('leftRoom',(data) => {
-    chrome.runtime.sendMessage({event:'leftRoom',data:data});
+socket.on('leaveRoom',(users) => {
+    chrome.runtime.sendMessage({event:'leaveRoom',data:users});
 })
-
-// socket.on('pause',(data) => {
-//     // chrome.runtime.sendMessage({event:'pause',data:''});
-//     chrome.tabs.executeScript(null,{file:"./pause.js"});
-// })
 
 
 socket.on('syncVideo',(data) => {
@@ -56,11 +91,14 @@ socket.on('syncVideo',(data) => {
     }else{
         chrome.tabs.executeScript(null,{code:`var videoElements = document.querySelectorAll('video')[0]; videoElements.play()`})
     }
-        
-    // chrome.tabs.executeScript(null,{file:'./setDuration.js'})
+
 })
 
-// socket.on('hostName',(data) => {
-//     output.innerHTML += `<br><p>You're the Host</p>`
-// })
 
+socket.on('sendMessage', (data) => {
+    username = data.username
+    message = data.message
+    console.log(`${username} says ${message}`)
+    chatData.push({username:username,message:message})
+    chrome.runtime.sendMessage({event:'sendMessage',data:chatData});
+})
