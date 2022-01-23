@@ -20,6 +20,9 @@ var chatHTML = ''
 chatBox.style.display = 'none'
 
 
+const socketStatus = document.getElementById('socket_status')
+
+
 
 // When the popup window is reopened
 chrome.runtime.sendMessage({event:'checkAlive',data:null})

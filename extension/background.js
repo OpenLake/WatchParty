@@ -19,7 +19,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
     if (message.event === "joinRoom"){
         checkStatus()
-   
         if (existingConnection){
             alert('You are already in a room')
         }else{
@@ -33,7 +32,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
         
     }else if (message.event === "checkAlive"){
         checkStatus()
-  
         if (existingConnection){
             chrome.runtime.sendMessage({event:"checkAlive",data:{userData:userData,users:user_list}})
         }else{
