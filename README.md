@@ -17,10 +17,10 @@ All users open a shared link to a YouTube video and then join the room. Please n
 The video will sync automatically when the host plays/pauses the video or seeks the progress bar of the video
 
 ### When you join a room
-<img src="https://ibb.co/jrRqDn3">
+<a href="https://imgbb.com/"><img src="https://i.ibb.co/mc8d4fh/Screenshot-from-2022-12-13-18-05-34.png" alt="Screenshot-from-2022-12-13-18-05-34" border="0" /></a>
 
 ### Chat feature
-<img src="https://ibb.co/G3gY680">
+<a href="https://imgbb.com/"><img src="https://i.ibb.co/0VP476c/Screenshot-from-2022-12-13-18-09-37.png" alt="Screenshot-from-2022-12-13-18-09-37" border="0" /></a>
 
 ## 🎯 Future Goals 
 Integrate this extension with other streaming sites like Netflix, Amazon Prime, etc.
