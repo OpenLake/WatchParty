@@ -24,12 +24,13 @@ The video will sync automatically when the host plays/pauses the video or seeks 
 
 ## 🔧 How to get the extension loaded?
 ### Steps : 
-1.  Download the zip of this repository (because you might face some issues if you try to get the repository on your local using command line) 
+1. Copy the HTTPS url of the repository.
 
-![1](https://user-images.githubusercontent.com/107767172/208070710-a3680da4-17e5-4599-b12f-28f0e19be732.png)
+![1](https://user-images.githubusercontent.com/107767172/208246069-bfbfa0d6-3cd3-424c-8b98-cca110cc7fce.png)
 
-
-2. Unzip the downloaded zip file.You should be able to see these folders.
+2. Navigate to the desired location on your local and open command line there.
+   Run this command : **git clone** _paste copied link here_<br>
+   You should be able to see these files and folders.
 
 ![2](https://user-images.githubusercontent.com/107767172/208070773-205977ca-6336-4c39-9a55-179d9bda4c8f.png)
 
