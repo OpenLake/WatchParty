@@ -47,9 +47,10 @@ usersButton.addEventListener('click', () => {
 
 sendButton.addEventListener('click', () => {
     innerChatBox.style.color = 'white'
-    innerChatBox.innerHTML += `<p><b>You</b>: ${messageBox.value}</p>`
-    messageBox.value="";
-    chrome.runtime.sendMessage({event:"sendMessage",data:messageBox.value});
+    if(messageBox.value!=""){
+        innerChatBox.innerHTML += `<p><b>You</b>: ${messageBox.value}</p>`
+        chrome.runtime.sendMessage({event:"sendMessage",data:messageBox.value});
+    }
 })
 
 chatButton.addEventListener('click', () => {
