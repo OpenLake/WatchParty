@@ -50,6 +50,7 @@ sendButton.addEventListener('click', () => {
     if(messageBox.value!=""){
         innerChatBox.innerHTML += `<p><b>You</b>: ${messageBox.value}</p>`
         chrome.runtime.sendMessage({event:"sendMessage",data:messageBox.value});
+        messageBox.value="";
     }
 })
 
