@@ -62,8 +62,10 @@ The video will sync automatically when the host plays/pauses the video or seeks 
 
 ### To start the server locally : 
 
- 1. Open the "server" folder that we downloaded earlier.
- 2. Open command line there and run this command :    **node index.js**  
+ 1. Install node on your local from this link :  https://nodejs.org/en/download/
+ 2. Open command line and install npm using this command : **npm install -g npm**
+ 3. Open the "server" folder that we downloaded earlier.
+ 4. Open command line there and run this command :    **node index.js**  
  
  ![Screenshot (31)](https://user-images.githubusercontent.com/107767172/208076494-471f669c-a70b-4977-94e3-f1d18fd33677.png)
 
