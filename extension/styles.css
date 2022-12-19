@@ -99,19 +99,18 @@ body {
   outline: none;
 }
 
-.btn-hover.color-1.join {
-  margin-left: 35px;
+/* Join Button */
+.btn-hover.color-111 {
+  margin-left: 31px;
   width: 85px;
-}
-.btn-hover.color-1{
-  background-image: linear-gradient(to right, #25aae1, #40e495, #30dd8a, #2bb673);
+  background-image: linear-gradient(to right, #98FB91, #08B118);
   box-shadow: 0 1px 4px 0 rgba(49, 196, 190, 0.75);
   margin-top: 15px;
-  margin-left: 5px;
   margin-bottom: 0;
   padding-bottom: 0;
 }
 
+/* Leave Button */
 .btn-hover.color-11 {
   background-image: linear-gradient(to right, #eb3941, #f15e64, #e14e53, #e2373f);  box-shadow: 0 5px 15px rgba(242, 97, 103, .4);
   box-shadow: 0 10px 25px rgba(242, 97, 103, .4);
@@ -121,6 +120,17 @@ body {
   left: 130px;
   width: 85px;
 }
+
+/*User Chat Sync Button */
+.btn-hover.color-1{
+  background-image: linear-gradient(to right, #83EAF1, #63A4FF);
+  box-shadow: 0 1px 4px 0 rgba(49, 196, 190, 0.75);
+  margin-top: 15px;
+  margin-left: 5px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
 .my-margin{
   position: relative;
   bottom: 50px;
@@ -188,8 +198,6 @@ body {
     70% { top: -150px; }
 }
 
-    70% { top: -150px; }
-} */
 @keyframes move {
     0%  { top: 0px; }
     20% { top: -50px; }
