@@ -63,7 +63,7 @@ The video will sync automatically when the host plays/pauses the video or seeks 
 ### To start the server locally : 
 
  1. Open the "server" folder and open command line there.
- 2. Run this command to install dependencies : **npm i cors ejs express socket.io**
+ 2. Run this command to install dependencies : **npm install**
  3. Run this command to start the server locally :    **node index.js**  
  
  ![Screenshot (31)](https://user-images.githubusercontent.com/107767172/208076494-471f669c-a70b-4977-94e3-f1d18fd33677.png)
