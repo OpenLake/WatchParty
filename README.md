@@ -78,4 +78,5 @@ Integrate this extension with other streaming sites like Netflix, Amazon Prime, 
 
 - 👤 **Chaitanya Bisht** [@chaitanyabisht](https://github.com/chaitanyabisht)
 - 👤 **Rishi Purwar** [@rishipurwar1](https://github.com/rishipurwar1)
+- 👤 **Nitin** [@krypnyx](https://github.com/krypnyx)
 ---
