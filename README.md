@@ -24,7 +24,7 @@ The video will sync automatically when the host plays/pauses the video or seeks 
 
 ## 🔧 How to get the extension loaded?
 ### Steps : 
-1. Copy the HTTPS url of the repository.
+1. Copy the HTTPS/SSH url of the repository.
 
 ![1](https://user-images.githubusercontent.com/107767172/208246069-bfbfa0d6-3cd3-424c-8b98-cca110cc7fce.png)
 
