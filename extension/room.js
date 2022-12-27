@@ -23,7 +23,7 @@ const syncButton = document.getElementById('syncButton')
 
 const socketStatus = document.getElementById('socket_status')
 
-
+console.log("room.js injected");
 
 // When the popup window is reopened
 chrome.runtime.sendMessage({event:'checkAlive',data:null})
