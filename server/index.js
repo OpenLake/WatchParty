@@ -23,13 +23,11 @@ app.get('/hello', (req, res) => {
 })
 
 
-// var io = socket(server, {
-//     cors: {
-//         origin: '*'
-//     }
-// })
-
-const io = require('socket.io')(server, {cors: '*'});
+var io = socket(server, {
+    cors: {
+        origin: '*'
+    }
+})
 
 io.on('connection', (socket) => {
     console.log(`Connection made to socket id ${socket.id}`)

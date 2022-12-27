@@ -11,7 +11,8 @@ async function Alive(time) {
 
 Alive(4.9 * 60 * 1000);
 
-const socket = io();
+// const socket = io();
+var socket = io.connect('http://localhost:4000');
 
 var existingConnection = false;
 var userData = {};
