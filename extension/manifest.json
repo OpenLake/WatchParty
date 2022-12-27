@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "manifest_version": 3,
   "description": "Watch movies with your friends remotely and Interact with them using the chat. 🎥🥳",
-  "permissions": ["tabs", "activeTab"],
+  "permissions": ["tabs", "activeTab", "scripting"],
   "host_permissions": [
     "https://www.w3schools.com/*",
     "https://www.youtube.com/*",
