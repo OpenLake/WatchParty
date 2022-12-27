@@ -2,8 +2,6 @@ console.log("Backgroud.js injected");
 
 // import {io} from  './socket.io-client';
 
-console.log("Backgroud.js injected");
-
 // function for keeping service worker alive
 
 async function Alive(time) {
