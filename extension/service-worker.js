@@ -1,5 +1,5 @@
 //injecting socket.io scripts
-import './socket.io.js';
+import './socket.io-client/dist/socket.io.js'
 
 //importing background scripts
 import './background.js';
