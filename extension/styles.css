@@ -29,10 +29,14 @@ body {
 
 .badge.center2{
  padding: 0.3em;
+ margin-left: 40px;
+ width: 70%;
 }
 
 .badge.center1{
   padding: 0.3em;
+  margin-left: 50px;
+  width: 70%;
  }
 
 .btn.disable{
