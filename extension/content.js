@@ -20,3 +20,12 @@ progress_bar.addEventListener("click", () => {
     data: [videoElements.currentTime, videoElements.paused],
   });
 });
+
+var s = document.createElement('script');
+s.src = chrome.runtime.getURL('popup.js');
+s.onload = function() {
+    this.remove();
+};
+(document.head || document.documentElement).appendChild(s);
+
+console.log("content script injected");

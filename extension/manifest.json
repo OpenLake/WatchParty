@@ -27,5 +27,9 @@
     "16": "assets/icons/icon16.png",
     "48": "assets/icons/icon16.png",
     "128": "assets/icons/icon16.png"
-  }
+  },
+  "web_accessible_resources": [{
+    "resources": ["popup.js"],
+    "matches": ["<all_urls>"]
+  }]
 }
