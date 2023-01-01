@@ -4,4 +4,4 @@ window.open(
   "width=400,height=400"
 );
 
-console.log("popup.js injected");
+console.log("new popup window created");
