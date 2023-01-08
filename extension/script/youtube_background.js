@@ -1,4 +1,6 @@
- var socket = io.connect('http://localhost:4000')
+// Background script for youtube
+
+var socket = io.connect('http://localhost:4000')
 //var socket = io.connect('https://watchpartyserver.herokuapp.com/')
 
 var existingConnection = false;
@@ -58,7 +60,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
     }
 
     else if (message.event === 'setVideoState'){
-        chrome.tabs.executeScript(null,{file:'./script/getDuration.js'},(data) => {
+        chrome.tabs.executeScript(null,{file:'./script/getDuration_youtube.js'},(data) => {
             var time = data[0][0]
             var isPaused = data[0][1]
             socket.emit('syncVideo',[userData,[time,isPaused]])
