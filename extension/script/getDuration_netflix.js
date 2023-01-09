@@ -1,10 +1,9 @@
-const videoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer;
+function getVideoPlayer() {
+  let screen = window.netflix.appContext.state.playerApp.getAPI().videoPlayer;
+  let t = screen.getAllPlayerSessionIds().find((val) => val.includes("watch"));
+  return screen.getVideoPlayerBySessionId(t);
+}
 
-// getting netflix player id
-const playerSessionId = videoPlayer.getAllPlayerSessionIds()[0];
+var videoElements=getVideoPlayer();
 
-const player = videoPlayer.getVideoPlayerBySessionId(playerSessionId);
-
-var videoElements = player;
-
-[videoElements.currentTime, videoElements.paused];
+[videoElements.getCurrentTime(), videoElements.isPaused()];

@@ -1,18 +1,19 @@
-const videoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer;
+function getVideoPlayer() {
+  let screen = window.netflix.appContext.state.playerApp.getAPI().videoPlayer;
+  let t = screen.getAllPlayerSessionIds().find((val) => val.includes("watch"));
+  return screen.getVideoPlayerBySessionId(t);
+}
 
-// getting netflix player id
-const playerSessionId = videoPlayer.getAllPlayerSessionIds()[0];
+const player = getVideoPlayer();
 
-const player = videoPlayer.getVideoPlayerBySessionId(playerSessionId);
-
-var pause_play = player.paused;
-var progress_bar = player.currentTime;
+var pause_play = player.isPaused();
+var progress_bar = player.getCurrentTime();
 
 pause_play.addEventListener("click", () => {
   var videoElements = player;
   chrome.runtime.sendMessage({
     event: "syncVideo",
-    data: [videoElements.currentTime, videoElements.paused],
+    data: [videoElements.getCurrentTime(), videoElements.isPaused()],
   });
 });
 
@@ -20,6 +21,6 @@ progress_bar.addEventListener("click", () => {
   var videoElements = player;
   chrome.runtime.sendMessage({
     event: "syncVideo",
-    data: [videoElements.currentTime, videoElements.paused],
+    data: [videoElements.currentTime(), videoElements.isPaused()],
   });
 });

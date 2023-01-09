@@ -26,17 +26,17 @@
     {
       "matches": [
         "http://www.netflix.com/watch/*",
-        "https://www.netflix.com/*"
+        "https://www.netflix.com/watch/*"
       ],
-      "js": ["script/netflix_background.js", "script/netflix.js"],
+      "js": ["script/netflix.js"],
       "run_at": "document_end"
     },
     {
       "matches": [
-        "https://www.youtube.com/*",
+        "https://www.youtube.com/watch*",
         "http://www.youtube.com/watch/*"
       ],
-      "js": ["script/youtube_background.js", "script/youtube.js"],
+      "js": ["script/youtube.js"],
       "run_at": "document_end"
     }
   ]
