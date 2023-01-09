@@ -83,27 +83,17 @@ socket.on("syncVideo", (data) => {
   duration = data[0];
   isPaused = data[1];
   chrome.tabs.executeScript(null, {
-    code: `function getVideoPlayer() {
-        let screen = window.netflix.appContext.state.playerApp.getAPI().videoPlayer;
-        let t = screen.getAllPlayerSessionIds().find((val) => val.includes("watch"));
-        return screen.getVideoPlayerBySessionId(t);
-      } getVideoPlayer().seek(${duration});`,
+    code: `player.seek(${duration});`,
   });
   if (isPaused) {
     chrome.tabs.executeScript(null, {
-      code: `function getVideoPlayer() {
-        let screen = window.netflix.appContext.state.playerApp.getAPI().videoPlayer;
-        let t = screen.getAllPlayerSessionIds().find((val) => val.includes("watch"));
-        return screen.getVideoPlayerBySessionId(t);
-      } videoElements.pause();`,
+      code: `var netflix_media= document.querySelectorAll('video')[0]; 
+      netflix_media.pause()`,
     });
   } else {
     chrome.tabs.executeScript(null, {
-      code: `function getVideoPlayer() {
-        let screen = window.netflix.appContext.state.playerApp.getAPI().videoPlayer;
-        let t = screen.getAllPlayerSessionIds().find((val) => val.includes("watch"));
-        return screen.getVideoPlayerBySessionId(t);
-      } videoElements.play();`,
+      code: `var netflix_media= document.querySelectorAll('video')[0]; 
+      netflix_media.play()`,
     });
   }
 });
@@ -115,3 +105,5 @@ socket.on("sendMessage", (data) => {
   chatData.push({ username: username, message: message });
   chrome.runtime.sendMessage({ event: "sendMessage", data: chatData });
 });
+
+console.log("background netflix");

@@ -1,26 +1,29 @@
-function getVideoPlayer() {
-  let screen = window.netflix.appContext.state.playerApp.getAPI().videoPlayer;
-  let t = screen.getAllPlayerSessionIds().find((val) => val.includes("watch"));
-  return screen.getVideoPlayerBySessionId(t);
-}
+// Netflix player API
 
-const player = getVideoPlayer();
+const videoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer;
+const player = videoPlayer.getVideoPlayerBySessionId(
+  videoPlayer.getAllPlayerSessionIds()[0]
+);
 
-var pause_play = player.isPaused();
+const netflix_media = document.querySelectorAll('video')[0];
+
+var pause_play = netflix_media.paused
 var progress_bar = player.getCurrentTime();
 
 pause_play.addEventListener("click", () => {
-  var videoElements = player;
+  var videoElements = netflix_media;
   chrome.runtime.sendMessage({
     event: "syncVideo",
-    data: [videoElements.getCurrentTime(), videoElements.isPaused()],
+    data: [player.getCurrentTime(), videoElements.paused],
   });
 });
 
 progress_bar.addEventListener("click", () => {
-  var videoElements = player;
+  var videoElements = netflix_media;
   chrome.runtime.sendMessage({
     event: "syncVideo",
-    data: [videoElements.currentTime(), videoElements.isPaused()],
+    data: [player.getCurrentTime(), videoElements.paused],
   });
 });
+
+console.log("netflix");

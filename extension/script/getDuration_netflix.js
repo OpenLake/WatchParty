@@ -1,9 +1,13 @@
-function getVideoPlayer() {
-  let screen = window.netflix.appContext.state.playerApp.getAPI().videoPlayer;
-  let t = screen.getAllPlayerSessionIds().find((val) => val.includes("watch"));
-  return screen.getVideoPlayerBySessionId(t);
-}
+/*
+Netflix Player API
+const tempvideoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer;
+const media = tempvideoPlayer.getVideoPlayerBySessionId(
+  tempvideoPlayer.getAllPlayerSessionIds()[0]
+);
+*/
 
-var videoElements=getVideoPlayer();
+var videoElements = document.querySelectorAll('video')[0];
 
-[videoElements.getCurrentTime(), videoElements.isPaused()];
+[videoElements.currentTime,videoElements.paused]
+
+console.log("get Duration netflix");
