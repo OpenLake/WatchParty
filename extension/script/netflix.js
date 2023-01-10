@@ -6,7 +6,7 @@ var bottom_control = document.getElementsByClassName(
 bottom_control.addEventListener("click", () => {
   var videoElements = document.querySelectorAll("video")[0];
   chrome.runtime.sendMessage({
-    event: "syncVideo",
+    event: "syncNetflix",
     data: [videoElements.currentTime,videoElements.paused],
   });
 });

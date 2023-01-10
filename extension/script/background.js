@@ -44,8 +44,10 @@ chrome.runtime.onMessage.addListener(function (
     } else {
       chrome.runtime.sendMessage({ event: "checkAlive", data: "" });
     }
-  } else if (message.event === "syncVideo") {
-    socket.emit("syncVideo", [userData, message.data]);
+  } else if (message.event === "syncNetflix") {
+    socket.emit("syncNetflix", [userData, message.data]);
+  } else if (message.event === "syncYoutube") {
+    socket.emit("syncYoutube", [userData, message.data]);
   } else if (message.event === "leaveRoom") {
     socket.emit("leaveRoom", userData);
     chatData = [];
@@ -55,14 +57,24 @@ chrome.runtime.onMessage.addListener(function (
     socket.emit("sendMessage", { userData: userData, message: message.data });
   } else if (message.event === "fetchMessages") {
     chrome.runtime.sendMessage({ event: "sendMessage", data: chatData });
-  } else if (message.event === "setVideoState") {
+  } else if (message.event === "setVideoStateYoutube") {
     chrome.tabs.executeScript(
       null,
       { file: "./script/getDuration_youtube.js" },
       (data) => {
         var time = data[0][0];
         var isPaused = data[0][1];
-        socket.emit("syncVideo", [userData, [time, isPaused]]);
+        socket.emit("syncYoutube", [userData, [time, isPaused]]);
+      }
+    );
+  } else if (message.event === "setVideoStateNetflix") {
+    chrome.tabs.executeScript(
+      null,
+      { file: "./script/getDuration_netflix.js" },
+      (data) => {
+        var time = data[0][0];
+        var isPaused = data[0][1];
+        socket.emit("syncNetflix", [userData, [time, isPaused]]);
       }
     );
   }
@@ -80,7 +92,7 @@ socket.on("leaveRoom", (users) => {
   chrome.runtime.sendMessage({ event: "leaveRoom", data: users });
 });
 
-socket.on("syncVideo", (data) => {
+socket.on("syncYoutube", (data) => {
   duration = data[0];
   isPaused = data[1];
   chrome.tabs.executeScript(null, {
@@ -93,6 +105,26 @@ socket.on("syncVideo", (data) => {
   } else {
     chrome.tabs.executeScript(null, {
       code: `var videoElements = document.querySelectorAll('video')[0]; videoElements.play()`,
+    });
+  }
+});
+socket.on("syncNetflix", (data) => {
+  duration = data[0];
+  isPaused = data[1];
+  chrome.tabs.executeScript(null, {
+    code: `const tempvideoPlayer =netflix.appContext.state.playerApp.getAPI().videoPlayer;
+    const media = tempvideoPlayer.getVideoPlayerBySessionId(tempvideoPlayer.getAllPlayerSessionIds()[0]);
+    media.seek(${duration});`,
+  });
+  if (isPaused) {
+    chrome.tabs.executeScript(null, {
+      code: `var netflix_media= document.querySelectorAll('video')[0]; 
+      netflix_media.pause();`,
+    });
+  } else {
+    chrome.tabs.executeScript(null, {
+      code: `var netflix_media= document.querySelectorAll('video')[0]; 
+      netflix_media.play();`,
     });
   }
 });

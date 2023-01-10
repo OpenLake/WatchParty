@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
             })
             
 
-            socket.on('syncVideo',(data) => {
+            socket.on('syncYoutube',(data) => {
                 
                 // Only host can sync video
                 
@@ -67,9 +67,23 @@ io.on('connection', (socket) => {
                 media = data[1]
                 duration = media[0]
                 isPaused = media[1]
-                console.log(`sync request from ${userData.username} while media is running ${!media[1]}`)
+                console.log(`Youtube sync request from ${userData.username} while media is running ${!media[1]}`)
                 if (getHostName(userData.roomID) === userData.username){
-                    socket.broadcast.to(roomID).emit('syncVideo',[duration,isPaused])
+                    socket.broadcast.to(roomID).emit('syncYoutube',[duration,isPaused])
+                }
+            })
+
+            socket.on('syncNetflix',(data) => {
+                
+                // Only host can sync video
+                
+                userData = data[0]
+                media = data[1]
+                duration = media[0]
+                isPaused = media[1]
+                console.log(`Netflix sync request from ${userData.username} while media is running ${!media[1]}`)
+                if (getHostName(userData.roomID) === userData.username){
+                    socket.broadcast.to(roomID).emit('syncNetflix',[duration,isPaused])
                 }
             })
 
