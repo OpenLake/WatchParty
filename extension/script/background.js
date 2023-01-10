@@ -111,11 +111,16 @@ socket.on("syncYoutube", (data) => {
 socket.on("syncNetflix", (data) => {
   duration = data[0];
   isPaused = data[1];
-  chrome.tabs.executeScript(null, {
-    code: `const tempvideoPlayer =netflix.appContext.state.playerApp.getAPI().videoPlayer;
-    const media = tempvideoPlayer.getVideoPlayerBySessionId(tempvideoPlayer.getAllPlayerSessionIds()[0]);
-    media.seek(${duration});`,
-  });
+  chrome.tabs.executeScript(
+    null,
+    { file: "./script/netflix_seek.js" },
+    (data) => {
+      var player = data;
+    },
+    {
+      code: `player.seek(${duration})`,
+    }
+  );
   if (isPaused) {
     chrome.tabs.executeScript(null, {
       code: `var netflix_media= document.querySelectorAll('video')[0]; 
