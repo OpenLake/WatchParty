@@ -82,18 +82,20 @@ socket.on("leaveRoom", (users) => {
 socket.on("syncVideo", (data) => {
   duration = data[0];
   isPaused = data[1];
+  const tempvideoPlayer =netflix.appContext.state.playerApp.getAPI().videoPlayer;
+  const media = tempvideoPlayer.getVideoPlayerBySessionId(tempvideoPlayer.getAllPlayerSessionIds()[0]);
   chrome.tabs.executeScript(null, {
-    code: `player.seek(${duration});`,
+    code: `media.seek(${duration});`,
   });
   if (isPaused) {
     chrome.tabs.executeScript(null, {
       code: `var netflix_media= document.querySelectorAll('video')[0]; 
-      netflix_media.pause()`,
+      netflix_media.pause();`,
     });
   } else {
     chrome.tabs.executeScript(null, {
       code: `var netflix_media= document.querySelectorAll('video')[0]; 
-      netflix_media.play()`,
+      netflix_media.play();`,
     });
   }
 });

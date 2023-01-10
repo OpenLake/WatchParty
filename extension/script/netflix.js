@@ -1,29 +1,13 @@
 // Netflix player API
 
-const videoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer;
-const player = videoPlayer.getVideoPlayerBySessionId(
-  videoPlayer.getAllPlayerSessionIds()[0]
+var bottom_control = document.getElementsByClassName(
+  "player-control-button player-play-pause"
 );
-
-const netflix_media = document.querySelectorAll('video')[0];
-
-var pause_play = netflix_media.paused
-var progress_bar = player.getCurrentTime();
-
-pause_play.addEventListener("click", () => {
-  var videoElements = netflix_media;
+bottom_control.addEventListener("click", () => {
+  var videoElements = document.querySelectorAll("video")[0];
   chrome.runtime.sendMessage({
     event: "syncVideo",
-    data: [player.getCurrentTime(), videoElements.paused],
+    data: [player.currentTime(), videoElements.paused()],
   });
 });
 
-progress_bar.addEventListener("click", () => {
-  var videoElements = netflix_media;
-  chrome.runtime.sendMessage({
-    event: "syncVideo",
-    data: [player.getCurrentTime(), videoElements.paused],
-  });
-});
-
-console.log("netflix");

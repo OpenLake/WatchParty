@@ -60,13 +60,14 @@ io.on('connection', (socket) => {
             
 
             socket.on('syncVideo',(data) => {
+                
                 // Only host can sync video
                 
                 userData = data[0]
-                lst = data[1]
-                duration = lst[0]
-                isPaused = lst[1]
-                console.log(`sync req from ${userData.username} ${lst[1]}`)
+                media = data[1]
+                duration = media[0]
+                isPaused = media[1]
+                console.log(`sync request from ${userData.username} while media is running ${!media[1]}`)
                 if (getHostName(userData.roomID) === userData.username){
                     socket.broadcast.to(roomID).emit('syncVideo',[duration,isPaused])
                 }
