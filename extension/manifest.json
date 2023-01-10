@@ -39,5 +39,9 @@
       "js": ["script/youtube.js"],
       "run_at": "document_end"
     }
+  ],
+  "web_accessible_resources": [
+    "getDuration_netflix.js",
+    "getDuration_youtube.js"
   ]
 }
