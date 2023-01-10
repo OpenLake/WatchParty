@@ -8,6 +8,7 @@ var userData = {};
 var user_list = {};
 var chatData = [];
 
+// function for checking socket status
 function checkStatus() {
   if (socket.connected) {
     chrome.runtime.sendMessage({ event: "socketStatus", data: true });

@@ -7,7 +7,7 @@ bottom_control.addEventListener("click", () => {
   var videoElements = document.querySelectorAll("video")[0];
   chrome.runtime.sendMessage({
     event: "syncVideo",
-    data: [player.currentTime(), videoElements.paused()],
+    data: [videoElements.currentTime,videoElements.paused],
   });
 });
 

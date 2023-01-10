@@ -82,10 +82,10 @@ socket.on("leaveRoom", (users) => {
 socket.on("syncVideo", (data) => {
   duration = data[0];
   isPaused = data[1];
-  const tempvideoPlayer =netflix.appContext.state.playerApp.getAPI().videoPlayer;
-  const media = tempvideoPlayer.getVideoPlayerBySessionId(tempvideoPlayer.getAllPlayerSessionIds()[0]);
   chrome.tabs.executeScript(null, {
-    code: `media.seek(${duration});`,
+    code: `const tempvideoPlayer =netflix.appContext.state.playerApp.getAPI().videoPlayer;
+    const media = tempvideoPlayer.getVideoPlayerBySessionId(tempvideoPlayer.getAllPlayerSessionIds()[0]);
+    media.seek(${duration});`,
   });
   if (isPaused) {
     chrome.tabs.executeScript(null, {
