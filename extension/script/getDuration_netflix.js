@@ -1,9 +1,7 @@
 /*
 Netflix Player API
-const tempvideoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer;
-const media = tempvideoPlayer.getVideoPlayerBySessionId(
-tempvideoPlayer.getAllPlayerSessionIds()[0]
-);
+const videoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer;
+const player = videoPlayer.getVideoPlayerBySessionId(videoPlayer.getAllPlayerSessionIds()[0]);
 */
 
 var videoElements = document.querySelectorAll('video')[0];

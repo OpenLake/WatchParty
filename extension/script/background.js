@@ -92,6 +92,7 @@ socket.on("leaveRoom", (users) => {
   chrome.runtime.sendMessage({ event: "leaveRoom", data: users });
 });
 
+//socket connection for youtube
 socket.on("syncYoutube", (data) => {
   duration = data[0];
   isPaused = data[1];
@@ -108,19 +109,15 @@ socket.on("syncYoutube", (data) => {
     });
   }
 });
+//socket connection for netflix
 socket.on("syncNetflix", (data) => {
   duration = data[0];
   isPaused = data[1];
-  chrome.tabs.executeScript(
-    null,
-    { file: "./script/netflix_seek.js" },
-    (data) => {
-      var player = data;
-    },
-    {
-      code: `player.seek(${duration})`,
-    }
-  );
+  chrome.tabs.executeScript(null, {
+    code: `const videoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer;
+    const player = videoPlayer.getVideoPlayerBySessionId(videoPlayer.getAllPlayerSessionIds()[0]);
+    player.seek(${duration});`,
+  });
   if (isPaused) {
     chrome.tabs.executeScript(null, {
       code: `var netflix_media= document.querySelectorAll('video')[0]; 
