@@ -58,11 +58,9 @@ io.on('connection', (socket) => {
                 socket.leave(roomID)
             })
             
-
+            // Only host can sync video
+            // socket Youtube
             socket.on('syncYoutube',(data) => {
-                
-                // Only host can sync video
-                
                 userData = data[0]
                 media = data[1]
                 duration = media[0]
@@ -72,11 +70,8 @@ io.on('connection', (socket) => {
                     socket.broadcast.to(roomID).emit('syncYoutube',[duration,isPaused])
                 }
             })
-
+            // socket Netflix
             socket.on('syncNetflix',(data) => {
-                
-                // Only host can sync video
-                
                 userData = data[0]
                 media = data[1]
                 duration = media[0]
@@ -86,7 +81,17 @@ io.on('connection', (socket) => {
                     socket.broadcast.to(roomID).emit('syncNetflix',[duration,isPaused])
                 }
             })
-
+            // socket Hotstar
+            socket.on('syncHotstar',(data) => {
+                userData = data[0]
+                media = data[1]
+                duration = media[0]
+                isPaused = media[1]
+                console.log(`Hotstar sync request from ${userData.username} while media is running ${!media[1]}`)
+                if (getHostName(userData.roomID) === userData.username){
+                    socket.broadcast.to(roomID).emit('syncHotstar',[duration,isPaused])
+                }
+            })
             socket.on('sendMessage', (data) => {
                 username = data.userData.username
                 roomID = data.userData.roomID

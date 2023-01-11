@@ -32,6 +32,11 @@
       "run_at": "document_end"
     },
     {
+      "matches": ["https://www.hotstar.com/*"],
+      "js": ["script/hotstar.js"],
+      "run_at": "document_end"
+    },
+    {
       "matches": [
         "https://www.youtube.com/watch*",
         "http://www.youtube.com/watch/*"
@@ -42,6 +47,7 @@
   ],
   "web_accessible_resources": [
     "getDuration_netflix.js",
-    "getDuration_youtube.js"
+    "getDuration_youtube.js",
+    "getDuration_hotstar.js"
   ]
 }

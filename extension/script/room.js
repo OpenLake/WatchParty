@@ -71,6 +71,7 @@ if (chatboxshow === 0){
 syncButton.addEventListener('click', () => {
     chrome.runtime.sendMessage({event:"setVideoStateYoutube",data:''});
     chrome.runtime.sendMessage({event:"setVideoStateNetflix",data:''});
+    chrome.runtime.sendMessage({event:"setVideoStateHotstar",data:''});
 })
 
 
@@ -95,6 +96,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
 
         chrome.runtime.sendMessage({event:"setVideoStateYoutube",data:''})
         chrome.runtime.sendMessage({event:"setVideoStateNetflix",data:''})
+        chrome.runtime.sendMessage({event:"setVideoStateHotstar",data:''})
 
     }
     

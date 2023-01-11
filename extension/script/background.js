@@ -67,7 +67,18 @@ chrome.runtime.onMessage.addListener(function (
         socket.emit("syncYoutube", [userData, [time, isPaused]]);
       }
     );
-  } else if (message.event === "setVideoStateNetflix") {
+  }else if (message.event === "setVideoStateHotstar") {
+    chrome.tabs.executeScript(
+      null,
+      { file: "./script/getDuration_hotstar.js" },
+      (data) => {
+        var time = data[0][0];
+        var isPaused = data[0][1];
+        socket.emit("syncHotstar", [userData, [time, isPaused]]);
+      }
+    );
+  } 
+  else if (message.event === "setVideoStateNetflix") {
     chrome.tabs.executeScript(
       null,
       { file: "./script/getDuration_netflix.js" },
@@ -109,6 +120,23 @@ socket.on("syncYoutube", (data) => {
     });
   }
 });
+//socket connection for Hotstar
+socket.on("syncHotstar", (data) => {
+  duration = data[0];
+  isPaused = data[1];
+  chrome.tabs.executeScript(null, {
+    code: `var videoElements = document.querySelectorAll('video')[0]; videoElements.currentTime = ${duration}`,
+  });
+  if (isPaused) {
+    chrome.tabs.executeScript(null, {
+      code: `var videoElements = document.querySelectorAll('video')[0]; videoElements.pause()`,
+    });
+  } else {
+    chrome.tabs.executeScript(null, {
+      code: `var videoElements = document.querySelectorAll('video')[0]; videoElements.play()`,
+    });
+  }
+});
 //socket connection for netflix
 socket.on("syncNetflix", (data) => {
   duration = data[0];
@@ -116,7 +144,7 @@ socket.on("syncNetflix", (data) => {
   chrome.tabs.executeScript(null, {
     code: `const videoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer;
     const player = videoPlayer.getVideoPlayerBySessionId(videoPlayer.getAllPlayerSessionIds()[0]);
-    player.seek(${duration});`,
+    // player.seek(${duration});`,
   });
   if (isPaused) {
     chrome.tabs.executeScript(null, {
