@@ -29,7 +29,6 @@ var io = socket(server, {
     }
 })
 
-
 io.on('connection', (socket) => {
     console.log(`Connection made to socket id ${socket.id}`)
 

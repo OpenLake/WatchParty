@@ -29,12 +29,14 @@ body {
 
 .badge.center2{
  padding: 0.3em;
- margin-left: 22%;
+ margin-left: 40px;
+ width: 70%;
 }
 
 .badge.center1{
   padding: 0.3em;
-  margin-left: 26%;
+  margin-left: 50px;
+  width: 70%;
  }
 
 .btn.disable{
@@ -61,7 +63,7 @@ body {
 #sendButton{
   position: relative;
   bottom: 5px;
-  left:235px;
+  left:225px;
 }
 #message{
   position: relative;

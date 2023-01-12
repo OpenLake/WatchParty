@@ -1,3 +1,3 @@
-var videoElements = document.querySelectorAll('video')[0];
+var videoElements = document.querySelectorAll("video")[0];
 
-[videoElements.currentTime,videoElements.paused]
+[videoElements.currentTime, videoElements.paused];
