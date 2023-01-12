@@ -1,20 +1,53 @@
 {
-    "name": "Watch Party",
-    "version": "0.0.1",
-    "manifest_version": 2,
-    "browser_action": {
-        "default_popup": "popup.html"
+  "name": "Watch Party",
+  "version": "2.0.0",
+  "description": "Watch movies with your friends remotely and Interact with them using the chat. 🎥🥳",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs",
+    "https://www.netflix.com/*",
+    "https://www.youtube.com/*",
+    "activeTab",
+    "<all_urls>"
+  ],
+  "background": {
+    "page": "background.html",
+    "persistent": true
+  },
+  "icons": {
+    "16": "assets/icons/icon.png",
+    "48": "assets/icons/icon.png",
+    "128": "assets/icons/icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://www.netflix.com/watch/*",
+        "https://www.netflix.com/watch/*"
+      ],
+      "js": ["script/netflix.js"],
+      "run_at": "document_end"
     },
-    "permissions": ["tabs","https://www.youtube.com/*","activeTab","https://www.w3schools.com/*","<all_urls>"],
-    "background": {
-    	"page": "background.html",
-        "persistent": true
-  	},
-    "content_scripts": [
-        {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"],
-        "run_at": "document_end" 
-        }
-    ]
+    {
+      "matches": ["https://www.hotstar.com/*"],
+      "js": ["script/hotstar.js"],
+      "run_at": "document_end"
+    },
+    {
+      "matches": [
+        "https://www.youtube.com/watch*",
+        "http://www.youtube.com/watch/*"
+      ],
+      "js": ["script/youtube.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    "getDuration_netflix.js",
+    "getDuration_youtube.js",
+    "getDuration_hotstar.js"
+  ]
 }

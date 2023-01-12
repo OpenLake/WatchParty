@@ -58,20 +58,40 @@ io.on('connection', (socket) => {
                 socket.leave(roomID)
             })
             
-
-            socket.on('syncVideo',(data) => {
-                // Only host can sync video
-                
+            // Only host can sync video
+            // socket Youtube
+            socket.on('syncYoutube',(data) => {
                 userData = data[0]
-                lst = data[1]
-                duration = lst[0]
-                isPaused = lst[1]
-                console.log(`sync req from ${userData.username} ${lst[1]}`)
+                media = data[1]
+                duration = media[0]
+                isPaused = media[1]
+                console.log(`Youtube sync request from ${userData.username} while media is running ${!media[1]}`)
                 if (getHostName(userData.roomID) === userData.username){
-                    socket.broadcast.to(roomID).emit('syncVideo',[duration,isPaused])
+                    socket.broadcast.to(roomID).emit('syncYoutube',[duration,isPaused])
                 }
             })
-
+            // socket Netflix
+            socket.on('syncNetflix',(data) => {
+                userData = data[0]
+                media = data[1]
+                duration = media[0]
+                isPaused = media[1]
+                console.log(`Netflix sync request from ${userData.username} while media is running ${!media[1]}`)
+                if (getHostName(userData.roomID) === userData.username){
+                    socket.broadcast.to(roomID).emit('syncNetflix',[duration,isPaused])
+                }
+            })
+            // socket Hotstar
+            socket.on('syncHotstar',(data) => {
+                userData = data[0]
+                media = data[1]
+                duration = media[0]
+                isPaused = media[1]
+                console.log(`Hotstar sync request from ${userData.username} while media is running ${!media[1]}`)
+                if (getHostName(userData.roomID) === userData.username){
+                    socket.broadcast.to(roomID).emit('syncHotstar',[duration,isPaused])
+                }
+            })
             socket.on('sendMessage', (data) => {
                 username = data.userData.username
                 roomID = data.userData.roomID
