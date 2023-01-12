@@ -24,12 +24,14 @@ The video will sync automatically when the host plays/pauses the video or seeks 
 
 ## 🔧 How to get the extension loaded?
 ### Steps : 
-1. Copy the HTTPS/SSH url of the repository.
+
+1. Copy the HTTPS/SSH URL of the repository.
 
 ![1](https://user-images.githubusercontent.com/107767172/208246069-bfbfa0d6-3cd3-424c-8b98-cca110cc7fce.png)
 
 2. Navigate to the desired location on your local and open command line there.
-   Run this command : **git clone** _paste copied link here_<br>
+
+   Run this command : **git clone** _Enter URL_<br>
    You should be able to see these files and folders.
 
 ![2](https://user-images.githubusercontent.com/107767172/208070773-205977ca-6336-4c39-9a55-179d9bda4c8f.png)
@@ -64,7 +66,7 @@ The video will sync automatically when the host plays/pauses the video or seeks 
 
  1. Open the "server" folder and open command line there.
  2. Run this command to install dependencies : **npm install**
- 3. Run this command to start the server locally :    **node index.js**  
+ 3. Run this command to start the server locally :    **npm start**  
  
  ![Screenshot (31)](https://user-images.githubusercontent.com/107767172/208076494-471f669c-a70b-4977-94e3-f1d18fd33677.png)
 
