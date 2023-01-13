@@ -87,9 +87,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
         usersBox.innerHTML = '<br><ul class="list-group">'
         for (i = 0; i < users.length; ++i){
             if (users[i].username === userData.username){
-                usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span id="Host">check</span></li>`
+                usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span id="Host">H</span></li>`
             }else{
-                usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span id="Host">check</span></li>`
+                usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span id="Host">H</span></li>`
             }
         }
         usersBox.innerHTML += '</ul>'
@@ -105,9 +105,9 @@ chrome.runtime.onMessage.addListener(function(message, sender, senderResponse){
         users = message.data
         for (i = 0; i < users.length; ++i){
             if (users[i].username === userData.username){
-                usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span id="Host">check</span></li>`
+                usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span id="Host">H</span></li>`
             }else{
-                usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span id="Host">check</span></li>`
+                usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span id="Host">H</span></li>`
             }
             
 

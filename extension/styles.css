@@ -2,6 +2,14 @@ body {
     width: 300px;
     height: 100px;
 }
+
+#Host{
+  float:right;
+  font-weight: bolder;
+  color: #ffc107;
+  font-size: 20px;
+}
+
 .list-group-item{
   background-color: rgba(183, 194, 233, 0.615);
   border: none;
