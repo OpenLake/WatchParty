@@ -75,6 +75,10 @@ io.on("connection", (socket) => {
     socket.on("leaveRoom", (userData) => {
       console.log(`${userData.username} has left the room ${userData.roomID}`);
       removeUser(userData);
+      if(userData.username==CurrHostName)
+      {
+        CurrHostName = getHostName(roomID);
+      }
       socket.broadcast.to(roomID).emit("leaveRoom", [getUsers(roomID),CurrHostName]);
       socket.leave(roomID);
     });
