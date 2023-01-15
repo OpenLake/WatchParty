@@ -91,16 +91,16 @@ chrome.runtime.onMessage.addListener(function (
   }
 });
 
-socket.on("joinRoom", (users) => {
+socket.on("joinRoom", (data) => {
   chrome.runtime.sendMessage({
     event: "joinRoom",
-    data: { userData: userData, users: users },
+    data: { userData: userData, users: data[0] },
   });
-  user_list = users;
+  user_list = data[0];
 });
 
-socket.on("leaveRoom", (users) => {
-  chrome.runtime.sendMessage({ event: "leaveRoom", data: users });
+socket.on("leaveRoom", (data) => {
+  chrome.runtime.sendMessage({ event: "leaveRoom", data: data[0] });
 });
 
 //socket connection for youtube

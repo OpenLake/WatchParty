@@ -28,8 +28,7 @@ const socketStatus = document.getElementById('socket_status')
 // When the popup window is reopened
 chrome.runtime.sendMessage({event:'checkAlive',data:null})
 
-// Event listeners for buttons
-
+// Event listeners for popup buttons.
 button.addEventListener('click', () => {
     chrome.runtime.sendMessage({event:"joinRoom",data:{username:username.value,roomID:roomID.value}});
 

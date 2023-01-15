@@ -47,8 +47,10 @@ io.on("connection", (socket) => {
     socket.join(roomID);
 
     addUser({ username: username, roomID: roomID, userID: socket.id });
-    socket.emit("joinRoom", getUsers(roomID));
-    socket.broadcast.to(roomID).emit("joinRoom", getUsers(roomID));
+
+    // emiting users in room=roomID with their current Host Name.
+    socket.emit("joinRoom", [getUsers(roomID),CurrHostName]);
+    socket.broadcast.to(roomID).emit("joinRoom", [getUsers(roomID),CurrHostName]);
 
     // If there is no host in non empty room then make the 1st guy of room as host 
     if (CurrHostUserID == "") {
@@ -58,21 +60,22 @@ io.on("connection", (socket) => {
       CurrHostName = getHostName(roomID);
     }
     
-    console.log(CurrHostName);
+    console.log(`curent Host in room ${roomID} is ${CurrHostName}`);
+
     io.to(CurrHostUserID).emit("hostName", CurrHostUserID);
     // This listener is nested inside a listener
 
     socket.on("disconnect", () => {
       console.log(`${username} has left the room(Socket Disconnected)`);
       removeUser({ username, roomID });
-      socket.broadcast.to(roomID).emit("leaveRoom", getUsers(roomID));
+      socket.broadcast.to(roomID).emit("leaveRoom", [getUsers(roomID),CurrHostName]);
       socket.leave(roomID);
     });
 
     socket.on("leaveRoom", (userData) => {
       console.log(`${userData.username} has left the room ${userData.roomID}`);
       removeUser(userData);
-      socket.broadcast.to(roomID).emit("leaveRoom", getUsers(roomID));
+      socket.broadcast.to(roomID).emit("leaveRoom", [getUsers(roomID),CurrHostName]);
       socket.leave(roomID);
     });
 
