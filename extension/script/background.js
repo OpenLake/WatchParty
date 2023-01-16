@@ -7,6 +7,7 @@ var existingConnection = false;
 var userData = {};
 var user_list = {};
 var chatData = [];
+var CurrHostName = "";
 
 // function for checking socket status
 function checkStatus() {
@@ -39,7 +40,11 @@ chrome.runtime.onMessage.addListener(function (
     if (existingConnection) {
       chrome.runtime.sendMessage({
         event: "checkAlive",
-        data: { userData: userData, users: user_list },
+        data: {
+          userData: userData,
+          users: user_list,
+          currHostName: currHostName,
+        },
       });
     } else {
       chrome.runtime.sendMessage({ event: "checkAlive", data: "" });
@@ -67,7 +72,7 @@ chrome.runtime.onMessage.addListener(function (
         socket.emit("syncYoutube", [userData, [time, isPaused]]);
       }
     );
-  }else if (message.event === "setVideoStateHotstar") {
+  } else if (message.event === "setVideoStateHotstar") {
     chrome.tabs.executeScript(
       null,
       { file: "./script/getDuration_hotstar.js" },
@@ -77,8 +82,7 @@ chrome.runtime.onMessage.addListener(function (
         socket.emit("syncHotstar", [userData, [time, isPaused]]);
       }
     );
-  } 
-  else if (message.event === "setVideoStateNetflix") {
+  } else if (message.event === "setVideoStateNetflix") {
     chrome.tabs.executeScript(
       null,
       { file: "./script/getDuration_netflix.js" },
@@ -92,15 +96,21 @@ chrome.runtime.onMessage.addListener(function (
 });
 
 socket.on("joinRoom", (data) => {
+  currHostName = data[1];
+  console.log(`current host: ${currHostName}`);
   chrome.runtime.sendMessage({
     event: "joinRoom",
-    data: { userData: userData, users: data[0] },
+    data: { userData: userData, users: data[0], currHostName: data[1] },
   });
   user_list = data[0];
 });
 
 socket.on("leaveRoom", (data) => {
-  chrome.runtime.sendMessage({ event: "leaveRoom", data: data[0] });
+  console.log(`current host: ${data[1]}`);
+  chrome.runtime.sendMessage({
+    event: "leaveRoom",
+    data: { users: data[0], currHostName: data[1] },
+  });
 });
 
 //socket connection for youtube
