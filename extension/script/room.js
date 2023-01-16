@@ -83,19 +83,25 @@ chrome.runtime.onMessage.addListener(function (
   senderResponse
 ) {
   if (message.event === "joinRoom") {
-
     userData = message.data.userData;
     users = message.data.users;
-    currHostName=message.data.currHostName;
+    currHostName = message.data.currHostName;
 
     console.log("join room");
-    
+
     usersBox.innerHTML = '<br><ul class="list-group">';
     for (i = 0; i < users.length; ++i) {
-      if (users[i].username === userData.username) {
+      if (
+        users[i].username === userData.username &&
+        users[i].username === currHostName
+      ) {
         usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span id="Host">HOST</span></li>`;
-      } else {
+      } else if (users[i].username === userData.username) {
+        usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span></span></li>`;
+      } else if (users[i].username === currHostName) {
         usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span id="Host">HOST</span></li>`;
+      } else {
+        usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span></span></li>`;
       }
     }
     usersBox.innerHTML += "</ul>";
@@ -103,21 +109,26 @@ chrome.runtime.onMessage.addListener(function (
     chrome.runtime.sendMessage({ event: "setVideoStateYoutube", data: "" });
     chrome.runtime.sendMessage({ event: "setVideoStateNetflix", data: "" });
     chrome.runtime.sendMessage({ event: "setVideoStateHotstar", data: "" });
-
   } else if (message.event === "checkAlive") {
-
     userData = message.data.userData;
     users = message.data.users;
-    currHostName=message.data.currHostName;
+    currHostName = message.data.currHostName;
 
     console.log("check alive");
 
     usersBox.innerHTML = '<br><ul class="list-group">';
     for (i = 0; i < users.length; ++i) {
-      if (users[i].username === userData.username) {
+      if (
+        users[i].username === userData.username &&
+        users[i].username === currHostName
+      ) {
         usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span id="Host">HOST</span></li>`;
-      } else {
+      } else if (users[i].username === userData.username) {
+        usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span></span></li>`;
+      } else if (users[i].username === currHostName) {
         usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span id="Host">HOST</span></li>`;
+      } else {
+        usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span></span></li>`;
       }
     }
     usersBox.innerHTML += "</ul>";
@@ -125,25 +136,29 @@ chrome.runtime.onMessage.addListener(function (
     chrome.runtime.sendMessage({ event: "setVideoStateYoutube", data: "" });
     chrome.runtime.sendMessage({ event: "setVideoStateNetflix", data: "" });
     chrome.runtime.sendMessage({ event: "setVideoStateHotstar", data: "" });
-
-  }else if (message.event === "leaveRoom") {
-
+  } else if (message.event === "leaveRoom") {
     userData = message.data.userData;
     users = message.data.users;
-    currHostName=message.data.currHostName;
+    currHostName = message.data.currHostName;
 
     console.log("leave room");
 
     usersBox.innerHTML = '<br><ul class="list-group">';
     for (i = 0; i < users.length; ++i) {
-      if (users[i].username === userData.username) {
+      if (
+        users[i].username === userData.username &&
+        users[i].username === currHostName
+      ) {
         usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span id="Host">HOST</span></li>`;
-      } else {
+      } else if (users[i].username === userData.username) {
+        usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span></span></li>`;
+      } else if (users[i].username === currHostName) {
         usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span id="Host">HOST</span></li>`;
+      } else {
+        usersBox.innerHTML += `<li class="list-group-item"><span>${users[i].username}</span><span></span></li>`;
       }
     }
     usersBox.innerHTML += "</ul>";
-
   } else if (message.event === "sendMessage") {
     var chatData = message.data;
     innerChatBox.style.color = "white";
@@ -151,7 +166,6 @@ chrome.runtime.onMessage.addListener(function (
     for (var i = 0; i < chatData.length; ++i) {
       innerChatBox.innerHTML += `<p><b>${chatData[i].username}</b>: ${chatData[i].message}</p>`;
     }
-
   } else if (message.event === "socketStatus") {
     if (message.data == true) {
       socketStatus.innerHTML =
