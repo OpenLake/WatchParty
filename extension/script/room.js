@@ -83,9 +83,13 @@ chrome.runtime.onMessage.addListener(function (
   senderResponse
 ) {
   if (message.event === "joinRoom") {
+
     userData = message.data.userData;
     users = message.data.users;
+    currHostName=message.data.currHostName;
+
     console.log("join room");
+    
     usersBox.innerHTML = '<br><ul class="list-group">';
     for (i = 0; i < users.length; ++i) {
       if (users[i].username === userData.username) {
@@ -101,10 +105,13 @@ chrome.runtime.onMessage.addListener(function (
     chrome.runtime.sendMessage({ event: "setVideoStateHotstar", data: "" });
 
   } else if (message.event === "checkAlive") {
+
     userData = message.data.userData;
     users = message.data.users;
+    currHostName=message.data.currHostName;
+
     console.log("check alive");
-    console.log(message.data.currHostName);
+
     usersBox.innerHTML = '<br><ul class="list-group">';
     for (i = 0; i < users.length; ++i) {
       if (users[i].username === userData.username) {
@@ -120,9 +127,14 @@ chrome.runtime.onMessage.addListener(function (
     chrome.runtime.sendMessage({ event: "setVideoStateHotstar", data: "" });
 
   }else if (message.event === "leaveRoom") {
-    usersBox.innerHTML = '<br><ul class="list-group">';
+
+    userData = message.data.userData;
     users = message.data.users;
+    currHostName=message.data.currHostName;
+
     console.log("leave room");
+
+    usersBox.innerHTML = '<br><ul class="list-group">';
     for (i = 0; i < users.length; ++i) {
       if (users[i].username === userData.username) {
         usersBox.innerHTML += `<li class="list-group-item active"><span>${users[i].username}</span><span id="Host">HOST</span></li>`;

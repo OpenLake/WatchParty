@@ -109,7 +109,7 @@ socket.on("leaveRoom", (data) => {
   console.log(`current host: ${data[1]}`);
   chrome.runtime.sendMessage({
     event: "leaveRoom",
-    data: { users: data[0], currHostName: data[1] },
+    data: { userData: userData, users: data[0], currHostName: data[1] },
   });
 });
 
