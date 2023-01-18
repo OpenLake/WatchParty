@@ -17,10 +17,10 @@ All users open a shared link to a YouTube video and then join the room. Please n
 The video will sync automatically when the host plays/pauses the video or seeks the progress bar of the video
 
 ### When you join a room
-<a href="https://imgbb.com/"><img src="https://i.ibb.co/mc8d4fh/Screenshot-from-2022-12-13-18-05-34.png" alt="Screenshot-from-2022-12-13-18-05-34" border="0" width=30% /></a>
+<a href="https://imgbb.com/"><img src="https://github.com/Ash-KODES/Project-Data/blob/main/FOSS%20Overflow%202022/Popup%20User%20Interface.png?raw=true" alt="Screenshot-from-2022-12-13-18-05-34" border="0" width=30% /></a>
 
 ### Chat feature
-<a href="https://imgbb.com/"><img src="https://i.ibb.co/0VP476c/Screenshot-from-2022-12-13-18-09-37.png" alt="Screenshot-from-2022-12-13-18-09-37" border="0" width=30%/></a>
+<a href="https://imgbb.com/"><img src="https://github.com/Ash-KODES/Project-Data/blob/main/FOSS%20Overflow%202022/Chating.png?raw=true" alt="Screenshot-from-2022-12-13-18-09-37" border="0" width=30%/></a>
 
 ## 🔧 How to get the extension loaded?
 ### Steps : 
