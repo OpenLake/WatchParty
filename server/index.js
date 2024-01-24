@@ -1,6 +1,12 @@
 var express = require("express");
-var socket = require("socket.io");
+// var socket = require("socket.io");
 var cors = require("cors");
+
+//I added these lines
+const { Server } = require("socket.io");
+const { createServer } = require("node:http");
+const app = express();
+const server = createServer(app);
 
 const {
   addUser,
@@ -8,31 +14,39 @@ const {
   getHostUserID,
   getUsers,
   removeUser,
+  rooms,
 } = require("./utils/room");
 
-var app = express();
-app.use(cors());
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
+// app.use(cors());
 
 app.set("view engine", "ejs");
+
 app.get("/", (req, res) => {
   res.render("index");
 });
 
 const PORT = process.env.PORT || 4000;
 
-var server = app.listen(PORT, () => {
-  console.log(`Listening to requests on port ${PORT}`);
+server.listen(PORT, () => {
+  console.log("server running at port : ", PORT);
 });
 
 app.get("/hello", (req, res) => {
   res.send("Hello");
 });
 
-var io = socket(server, {
-  cors: {
-    origin: "*",
-  },
-});
 
 // Empty string representing No Host yet
 var CurrHostName = "";
@@ -42,28 +56,33 @@ io.on("connection", (socket) => {
   console.log(`Connection made to socket id ${socket.id}`);
 
   socket.on("joinRoom", ({ username, roomID }) => {
-
     console.log(`${username} joined room ${roomID}`);
     socket.join(roomID);
+
+    // if(!username) username="";
 
     addUser({ username: username, roomID: roomID, userID: socket.id });
 
     // emiting users in room=roomID with their current Host Name.
-    socket.emit("joinRoom", [getUsers(roomID),CurrHostName]);
-    socket.broadcast.to(roomID).emit("joinRoom", [getUsers(roomID),CurrHostName]);
+    socket.emit("joinRoom", [getUsers(roomID), CurrHostName]);
+    socket.broadcast
+      .to(roomID)
+      .emit("joinRoom", [getUsers(roomID), CurrHostName]);
 
-    // If there is no host in non empty room then make the 1st guy of room as host 
+    // If there is no host in non empty room then make the 1st guy of room as host
     if (CurrHostUserID == "") {
       CurrHostUserID = getHostUserID(roomID);
     }
     if (CurrHostName == "") {
       CurrHostName = getHostName(roomID);
     }
-    
+
     console.log(`curent Host in room ${roomID} is ${CurrHostName}`);
 
     io.to(CurrHostUserID).emit("hostName", CurrHostUserID);
-    // This listener is nested inside a listener
+  }); //-----------------
+
+  // This listener is nested inside a listener
 
     socket.on("disconnect", () => {
       console.log(`${username} has left the room(Socket Disconnected)`);
@@ -139,5 +158,6 @@ io.on("connection", (socket) => {
         .to(roomID)
         .emit("sendMessage", { username: username, message: message });
     });
-  });
+  // }); //--------------- i ve closed it above
 });
+

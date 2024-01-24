@@ -1,9 +1,16 @@
 // Background script for youtube
 
+// async function Alive(time) {
+//   console.log("service worker is running");
+//   setTimeout(() => Alive(time), time);
+// }
+
+// Alive(60 * 1000);
+
 var socket = io.connect("http://localhost:4000");
 //var socket = io.connect('https://watchpartyserver.herokuapp.com/')
 
-var existingConnection = false;
+var existingConnection = false ;
 var userData = {};
 var user_list = {};
 var chatData = [];
@@ -18,13 +25,19 @@ function checkStatus() {
   }
 }
 
+
+
 chrome.runtime.onMessage.addListener(function (
   message,
   sender,
   senderResponse
 ) {
   if (message.event === "joinRoom") {
+
+    console.log("JoinRoom event is being listened in bg.js ") ;
+    // alert('event received' ) ; 
     checkStatus();
+
     if (existingConnection) {
       alert("You are already in a room");
     } else {
@@ -33,6 +46,9 @@ chrome.runtime.onMessage.addListener(function (
         username: message.data.username,
         roomID: message.data.roomID,
       };
+
+      console.log("socket.emit(joinRoom) from bg.js line 37") ; 
+
       socket.emit("joinRoom", userData);
     }
   } else if (message.event === "checkAlive") {
@@ -65,6 +81,7 @@ chrome.runtime.onMessage.addListener(function (
   } else if (message.event === "setVideoStateYoutube") {
     chrome.tabs.executeScript(
       null,
+
       { file: "./script/getDuration_youtube.js" },
       (data) => {
         var time = data[0][0];
@@ -92,15 +109,34 @@ chrome.runtime.onMessage.addListener(function (
         socket.emit("syncNetflix", [userData, [time, isPaused]]);
       }
     );
-  }
+  }else if(message.event === 'startRecording'){ 
+      console.log('executing contentScript . . . '); 
+      chrome.tabs.executeScript({
+        file: './script/contentScript.js'
+      });
+
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
+        });
+      });
+    }
+    else if(message.event === 'stopRecording'){
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {greeting: "stopRecording"}, function(response) {
+        });
+      });
+    }
 });
 
 socket.on("joinRoom", (data) => {
-  currHostName = data[1];
-  console.log(`current host: ${currHostName}`);
+
+  console.log('socket receives joinRoom bg.js 106');
+
+  CurrHostName = data[1];
+  console.log(`current host: ${CurrHostName}`);
   chrome.runtime.sendMessage({
     event: "joinRoom",
-    data: { userData: userData, users: data[0], currHostName: data[1] },
+    data: { userData: userData, users: data[0], CurrHostName: data[1] },
   });
   user_list = data[0];
 });
@@ -176,3 +212,5 @@ socket.on("sendMessage", (data) => {
   chatData.push({ username: username, message: message });
   chrome.runtime.sendMessage({ event: "sendMessage", data: chatData });
 });
+
+
