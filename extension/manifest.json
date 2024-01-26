@@ -1,7 +1,7 @@
 {
   "name": "Watch Party",
   "version": "2.0.0",
-  "description": "Watch movies with your friends remotely and Interact with them using the chat. 🎥🥳",
+  "description": "Watch movies with your friends remotely and interact with them using the chat. 🎥🥳",
   "manifest_version": 2,
   "browser_action": {
     "default_popup": "popup.html"
@@ -11,7 +11,8 @@
     "https://www.netflix.com/*",
     "https://www.youtube.com/*",
     "activeTab",
-    "<all_urls>"
+    "<all_urls>",
+    "storage"
   ],
   "background": {
     "page": "background.html",
@@ -49,5 +50,7 @@
     "getDuration_netflix.js",
     "getDuration_youtube.js",
     "getDuration_hotstar.js"
-  ]
+  ],
+
+  "content_security_policy": "script-src 'self' https://cdn.socket.io https://unpkg.com/mic-recorder-to-mp3@2.2.1; object-src 'self'"
 }

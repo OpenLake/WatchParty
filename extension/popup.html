@@ -23,11 +23,16 @@
       href="https://fonts.googleapis.com/css2?family=Asap:wght@800&display=swap"
       rel="stylesheet"
     />
-    <script
+    <!-- <script
       src="./script/socket.io.js"
-      integrity="sha512-nYuHvSAhY5lFZ4ixSViOwsEKFvlxHMU2NHts1ILuJgOS6ptUmAGt/0i5czIgMOahKZ6JN84YFDA+mCdky7dD8A=="
+      integrity="sha512-E3343F0E4B27DB4992076FA8285A820B6DA30D6EE4113625D9BE5494AF2BCCBE45427E77ED796BCB57EB39020CAFF617FB649622783E3B8C37BDF58C9F9ECD8E"
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
+    ></script> -->
+    <script
+      src="https://cdn.socket.io/4.7.4/socket.io.min.js"
+      integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4"
+      crossorigin="anonymous"
     ></script>
   </head>
   <body>
@@ -111,14 +116,14 @@
         <div id="output">
           <div id="usersBox"></div>
 
-          <div id="chatBox">
+          <div id="chatBox" style="display: flex">
             <br />
             <div
               id="innerChatBox"
               class="overflow-auto"
               style="
                 height: 100px;
-                width: 260ox;
+                width: 260px;
                 max-width: 260px;
                 max-height: 100px;
               "
@@ -128,6 +133,7 @@
               id="message"
               placeholder="Message"
             /><br />
+
             <input
               type="image"
               src="assets/images/bluegreen.png"
@@ -136,7 +142,15 @@
               height="44"
               id="sendButton"
             />
+
+            <button id="micButton" class="btn bg-light  btn-sm my-custom-button p-0">🎙️</button>
+
+            <button id="stopButton" class="btn bg-light btn-sm my-custom-button p-0">🛑</button>
+
           </div>
+
+       
+
         </div>
       </div>
     </div>

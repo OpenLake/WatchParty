@@ -6,6 +6,8 @@ const leaveButton = document.getElementById("leaveButton");
 const usersButton = document.getElementById("usersButton");
 const chatButton = document.getElementById("chatButton");
 const sendButton = document.getElementById("sendButton");
+const micButton = document.getElementById("micButton");
+const stopButton = document.getElementById("stopButton");
 
 var usersHTML = "";
 var chatHTML = "";
@@ -23,11 +25,21 @@ const syncButton = document.getElementById("syncButton");
 
 const socketStatus = document.getElementById("socket_status");
 
-// When the popup window is reopened
 chrome.runtime.sendMessage({ event: "checkAlive", data: null });
+
+micButton.addEventListener("click", () => {
+  chrome.runtime.sendMessage({ event: "startRecording" });
+});
+
+stopButton.addEventListener('click',()=>{
+  chrome.runtime.sendMessage({event : 'stopRecording'});
+}); 
 
 // Event listeners for popup buttons.
 button.addEventListener("click", () => {
+  console.log("JoinRoom Event triggered from Rooms.js ");
+  // alert('joinRoom clicked') ;
+
   chrome.runtime.sendMessage({
     event: "joinRoom",
     data: { username: username.value, roomID: roomID.value },
@@ -83,15 +95,18 @@ chrome.runtime.onMessage.addListener(function (
   senderResponse
 ) {
   if (message.event === "joinRoom") {
+    console.log("received joinRoom in room.js from bg.js line 88");
+
     userData = message.data.userData;
-    users = message.data.users;
+    users = message.data.users || [];
     currHostName = message.data.currHostName;
 
-    console.log("join room");
+    console.log("userData - ", userData);
 
     usersBox.innerHTML = '<br><ul class="list-group">';
     for (i = 0; i < users.length; ++i) {
       if (
+        userData &&
         users[i].username === userData.username &&
         users[i].username === currHostName
       ) {
@@ -110,8 +125,11 @@ chrome.runtime.onMessage.addListener(function (
     chrome.runtime.sendMessage({ event: "setVideoStateNetflix", data: "" });
     chrome.runtime.sendMessage({ event: "setVideoStateHotstar", data: "" });
   } else if (message.event === "checkAlive") {
-    userData = message.data.userData;
-    users = message.data.users;
+    if (message && message.data) {
+      userData = message.data.userData || null;
+      console.log("userdata from room.js line 119 ", userData);
+    }
+    users = message.data.users || [];
     currHostName = message.data.currHostName;
 
     console.log("check alive");
@@ -119,6 +137,7 @@ chrome.runtime.onMessage.addListener(function (
     usersBox.innerHTML = '<br><ul class="list-group">';
     for (i = 0; i < users.length; ++i) {
       if (
+        userData &&
         users[i].username === userData.username &&
         users[i].username === currHostName
       ) {
@@ -138,7 +157,7 @@ chrome.runtime.onMessage.addListener(function (
     chrome.runtime.sendMessage({ event: "setVideoStateHotstar", data: "" });
   } else if (message.event === "leaveRoom") {
     userData = message.data.userData;
-    users = message.data.users;
+    users = message.data.users || [];
     currHostName = message.data.currHostName;
 
     console.log("leave room");
@@ -176,3 +195,53 @@ chrome.runtime.onMessage.addListener(function (
     }
   }
 });
+
+//------------------------------------------------------------------------------------------------------
+
+
+// let isRecording = false;
+// micButton.addEventListener("click", function () {
+//   if (!isRecording) {
+//     chrome.runtime.sendMessage({
+//       event: "startRecording",
+//       data: { username: username.value, roomID: roomID.value },
+//     });
+//     micButton.textContent = "🔴 Stop";
+//     isRecording = !isRecording;
+//   } else {
+//     chrome.runtime.sendMessage({
+//       event: "stopRecording",
+//       data: { username: username.value, roomID: roomID.value },
+//     });
+//     micButton.textContent = "🎙️ Mic";
+//     isRecording = !isRecording;
+//   }
+// });
+
+
+// function updateMicButton(eventTrigger) {
+//   chrome.storage.local.get(["isRecording"], function (result) {
+//     let isRecording = result.isRecording !== undefined ? result.isRecording : false;
+//     console.log("isRecording " + isRecording);
+
+//     if (isRecording) {
+//       micButton.innerText = "Stop";
+//       chrome.storage.local.set({ isRecording: false });
+
+//       if(eventTrigger==true){
+//       console.log('trigerring event stop recording');
+//       chrome.runtime.sendMessage({event : 'stopRecording'});
+//       }
+
+//     } else {
+//       micButton.innerText = "Start";
+//       chrome.storage.local.set({ isRecording: true });
+
+//       if(eventTrigger==true){
+//         console.log('trigerring event start recording');
+//       chrome.runtime.sendMessage({ event: "startRecording" });
+//       }
+//     }
+//   });
+// }
+// updateMicButton(false);

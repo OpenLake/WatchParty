@@ -170,6 +170,7 @@ body {
   left: 0;
 
 
+
 /*animation*/
 -webkit-animation:move 5s;
    -moz-animation:move 5s;
@@ -212,3 +213,28 @@ body {
     40% { top: -100px; }
     70% { top: -150; }
 }
+
+
+/* ------------------------  */
+#micButton{
+  margin-left: 9rem;
+}
+
+
+  .my-custom-button {
+    margin: 5px; 
+    font-size: 14px;  
+    width: 30px;  
+    margin-top: 43px;
+    height: 30px;  
+  }
+
+  /* Center the buttons within the chatBox */
+  #innerChatBox {
+    flex: 1; /* Allow the innerChatBox to take remaining space */
+  }
+
+  #micButton,
+  #stopButton {
+    align-self: flex-end; /* Align buttons to the bottom within the chatBox */
+  }
