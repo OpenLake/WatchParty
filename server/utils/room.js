@@ -22,9 +22,14 @@ function removeUser(userData){
     }
 }
 
-function getHostName(roomID){
-    return rooms[roomID][0].username
-}
+function getHostName(roomID) {
+    if (rooms[roomID] && rooms[roomID].length > 0) {
+      return rooms[roomID][0].username;
+    } else {
+      console.log('the room does not exist or has no users');
+    }
+  }
+  
 
 function getHostUserID(roomID){
     return rooms[roomID][0].userID
