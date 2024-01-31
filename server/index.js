@@ -56,8 +56,11 @@ io.on("connection", (socket) => {
   console.log(`Connection made to socket id ${socket.id}`);
 
   socket.on("joinRoom", ({ username, roomID }) => {
-    console.log(`${username} joined room ${roomID}`);
+    var message = `${username} joined room ${roomID}` ; 
+    console.log(message);
     socket.join(roomID);
+
+    socket.emit('send-notification', message);
 
     // if(!username) username="";
 
@@ -85,14 +88,19 @@ io.on("connection", (socket) => {
   // This listener is nested inside a listener
 
     socket.on("disconnect", () => {
-      console.log(`${username} has left the room(Socket Disconnected)`);
+      var message = `${username} has left the room(Socket Disconnected)`;
+    console.log(message); 
+    socket.emit('send-notification', message);
+
       removeUser({ username, roomID });
       socket.broadcast.to(roomID).emit("leaveRoom", [getUsers(roomID),CurrHostName]);
       socket.leave(roomID);
     });
 
     socket.on("leaveRoom", (userData) => {
-      console.log(`${userData.username} has left the room ${userData.roomID}`);
+      var message = `${userData.username} has left the room ${userData.roomID}` ;
+      socket.emit('send-notification', message);
+
       removeUser(userData);
       if(userData.username==CurrHostName)
       {
