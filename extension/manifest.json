@@ -12,7 +12,9 @@
     "https://www.youtube.com/*",
     "activeTab",
     "<all_urls>",
-    "storage"
+    "storage",
+    "notifications"
+
   ],
   "background": {
     "page": "background.html",
