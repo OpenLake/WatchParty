@@ -113,14 +113,21 @@ console.log('targetRoomId' , targetRoomId) ;
 //---------------------------------------------------------------------------------------------------
 
   socket.on("joinRoom", ({ username, roomID }) => {
+<<<<<<< HEAD
     
+=======
+>>>>>>> 26be4abfd7254ca419b754d88708f2415c795e4c
     var message = `${username} joined room ${roomID}` ; 
     console.log(message);
     socket.join(roomID);
 
+<<<<<<< HEAD
     socket.emit('send-notification', message); 
 
     curr_roomID = roomID ; 
+=======
+    socket.emit('send-notification', message);
+>>>>>>> 26be4abfd7254ca419b754d88708f2415c795e4c
 
     // if(!username) username="";
 
@@ -147,6 +154,7 @@ console.log('targetRoomId' , targetRoomId) ;
 
   // This listener is nested inside a listener
 
+<<<<<<< HEAD
   socket.on("disconnect", () => {
     var message = `${username} has left the room(Socket Disconnected)`;
     console.log(message); 
@@ -159,6 +167,30 @@ console.log('targetRoomId' , targetRoomId) ;
       .emit("leaveRoom", [getUsers(roomID), CurrHostName]);
     socket.leave(roomID);
   });
+=======
+    socket.on("disconnect", () => {
+      var message = `${username} has left the room(Socket Disconnected)`;
+    console.log(message); 
+    socket.emit('send-notification', message);
+
+      removeUser({ username, roomID });
+      socket.broadcast.to(roomID).emit("leaveRoom", [getUsers(roomID),CurrHostName]);
+      socket.leave(roomID);
+    });
+
+    socket.on("leaveRoom", (userData) => {
+      var message = `${userData.username} has left the room ${userData.roomID}` ;
+      socket.emit('send-notification', message);
+
+      removeUser(userData);
+      if(userData.username==CurrHostName)
+      {
+        CurrHostName = getHostName(roomID);
+      }
+      socket.broadcast.to(roomID).emit("leaveRoom", [getUsers(roomID),CurrHostName]);
+      socket.leave(roomID);
+    });
+>>>>>>> 26be4abfd7254ca419b754d88708f2415c795e4c
 
   socket.on("leaveRoom", (userData) => {
     var message = `${userData.username} has left the room ${userData.roomID}` ;

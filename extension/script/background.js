@@ -225,6 +225,19 @@ socket.on("sendMessage", (data) => {
   chatData.push({ username: username, message: message });
   chrome.runtime.sendMessage({ event: "sendMessage", data: chatData });
 });
+socket.on("send-notification", (data) => {
+  console.log(data);
+  showNotification(data);
+
+  function showNotification(message) {
+    chrome.notifications.create({
+      type: "basic",
+      iconUrl: "../assets/icons/WPicon.png",
+      title: "Room Notification",
+      message: message,
+    });
+  }
+});
 
 socket.on("send-notification", (data) => {
   console.log(data);

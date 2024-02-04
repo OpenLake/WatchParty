@@ -14,6 +14,10 @@
     "<all_urls>",
     "storage",
     "notifications"
+<<<<<<< HEAD
+=======
+
+>>>>>>> 26be4abfd7254ca419b754d88708f2415c795e4c
   ],
   "background": {
     "page": "background.html",
