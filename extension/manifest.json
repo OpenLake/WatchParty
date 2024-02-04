@@ -12,7 +12,8 @@
     "https://www.youtube.com/*",
     "activeTab",
     "<all_urls>",
-    "storage"
+    "storage",
+    "notifications"
   ],
   "background": {
     "page": "background.html",
@@ -52,5 +53,5 @@
     "getDuration_hotstar.js"
   ],
 
-  "content_security_policy": "script-src 'self' https://cdn.socket.io https://unpkg.com/mic-recorder-to-mp3@2.2.1; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://cdn.socket.io https://unpkg.com/mic-recorder-to-mp3@2.2.1 https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; object-src 'self'"
 }

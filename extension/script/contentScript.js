@@ -64,3 +64,9 @@ function downloadAudio() {
   downloadLink.setAttribute("download", "recorded_audio.ogg");
   downloadLink.click();
 }
+
+
+// ---------------------- xxx --- Uploading the file logic starts here --- xxx ---------------------------
+
+
+

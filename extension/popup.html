@@ -143,17 +143,31 @@
               id="sendButton"
             />
 
-            <button id="micButton" class="btn bg-light  btn-sm my-custom-button p-0">🎙️</button>
+            <div class="d-flex align-items-center justify-content-between">
+              <input
+                id="file-input"
+                type="file"
+                class="custom-file-input mt-1"
+              />
+              <button id="share-btn" class="btn btn-sm btn-info mt-1">Share</button>
 
-            <button id="stopButton" class="btn bg-light btn-sm my-custom-button p-0">🛑</button>
+              <div id="dynamicContent"></div>
+            </div>
 
+            <button id="micButton" class="btn bg-light btn-sm my-custom-button p-0">
+              🎙️
+            </button>
+
+            <button id="stopButton" class="btn bg-light btn-sm my-custom-button p-0">
+              🛑
+            </button>
           </div>
-
-       
-
         </div>
       </div>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/socketio-file-upload@0.7.3/client.min.js"></script>
+
     <script src="script/room.js"></script>
   </body>
 </html>

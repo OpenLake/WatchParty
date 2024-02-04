@@ -9,6 +9,10 @@ const sendButton = document.getElementById("sendButton");
 const micButton = document.getElementById("micButton");
 const stopButton = document.getElementById("stopButton");
 
+const fileInputElement = document.getElementById("file-input");
+const shareButton = document.getElementById("share-btn");
+const dynamicContent= document.getElementById('dynamicContent'); 
+
 var usersHTML = "";
 var chatHTML = "";
 var chatboxshow = 0;
@@ -31,9 +35,9 @@ micButton.addEventListener("click", () => {
   chrome.runtime.sendMessage({ event: "startRecording" });
 });
 
-stopButton.addEventListener('click',()=>{
-  chrome.runtime.sendMessage({event : 'stopRecording'});
-}); 
+stopButton.addEventListener("click", () => {
+  chrome.runtime.sendMessage({ event: "stopRecording" });
+});
 
 // Event listeners for popup buttons.
 button.addEventListener("click", () => {
@@ -197,51 +201,101 @@ chrome.runtime.onMessage.addListener(function (
 });
 
 //------------------------------------------------------------------------------------------------------
+ 
+shareButton.addEventListener("click", async () => {
 
+  if (fileInputElement.files.length === 0) {
+    alert("Choose the file you want to send 📁");
+    return;
+  }
 
-// let isRecording = false;
-// micButton.addEventListener("click", function () {
-//   if (!isRecording) {
-//     chrome.runtime.sendMessage({
-//       event: "startRecording",
-//       data: { username: username.value, roomID: roomID.value },
-//     });
-//     micButton.textContent = "🔴 Stop";
-//     isRecording = !isRecording;
-//   } else {
-//     chrome.runtime.sendMessage({
-//       event: "stopRecording",
-//       data: { username: username.value, roomID: roomID.value },
-//     });
-//     micButton.textContent = "🎙️ Mic";
-//     isRecording = !isRecording;
-//   }
-// });
+  let file = fileInputElement.files[0];
+  let reader = new FileReader(); 
 
+  reader.onload = () => {
+    let buffer = new Uint8Array(reader.result);
 
-// function updateMicButton(eventTrigger) {
-//   chrome.storage.local.get(["isRecording"], function (result) {
-//     let isRecording = result.isRecording !== undefined ? result.isRecording : false;
-//     console.log("isRecording " + isRecording);
+    console.log(buffer); 
 
-//     if (isRecording) {
-//       micButton.innerText = "Stop";
-//       chrome.storage.local.set({ isRecording: false });
+    initFileShare({ filename: file.name, bufferSize: buffer.length }, buffer);
+  };
 
-//       if(eventTrigger==true){
-//       console.log('trigerring event stop recording');
-//       chrome.runtime.sendMessage({event : 'stopRecording'});
-//       }
+  reader.readAsArrayBuffer(file);
+});
 
-//     } else {
-//       micButton.innerText = "Start";
-//       chrome.storage.local.set({ isRecording: true });
-
-//       if(eventTrigger==true){
-//         console.log('trigerring event start recording');
-//       chrome.runtime.sendMessage({ event: "startRecording" });
-//       }
-//     }
-//   });
+// function initFileShare(metadata, buffer) {
+//   const bufferArray = Array.from(buffer);
+//   chrome.runtime.sendMessage({ event: "file-share", metadata, bufferArray});
 // }
-// updateMicButton(false);
+
+
+function initFileShare(metadata, buffer) {
+  console.log('Initiating file share...');
+  
+  const bufferArray = Array.from(buffer);
+
+  navigator.serviceWorker.ready
+    .then((registration) => {
+      console.log('Service Worker is ready.');
+
+      if (registration.active) {
+        console.log('Posting message to service worker...');
+
+        registration.active.postMessage({
+          event: "file-share",
+          metadata,
+          bufferArray,
+        });
+      } else {
+        console.error('No active service worker found.');
+      }
+    })
+    .catch((error) => {
+      console.error("Service Worker registration failed:", error);
+    });
+}
+ 
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.event === "downloadFile") {
+    console.log('download file . . . .') ; 
+
+    const { buffer, filename } = message;
+
+    console.log('Received file :', buffer);
+
+    if (!(buffer instanceof Blob)) {
+      console.error('Invalid blob object:', buffer);
+      return;
+    }
+
+    // downloadFile(buffer, filename);
+  }
+});
+
+function downloadFile(blob, name = "shared.txt") {
+  const blobUrl = URL.createObjectURL(blob);
+
+  const downloadButton = document.createElement("button");
+  dynamicContent.appendChild(downloadButton);
+
+  downloadButton.innerText = "Download File 📥";
+
+  downloadButton.addEventListener("click", () => {
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = name;
+    dynamicContent.appendChild(link);
+
+    link.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      })
+    );
+
+    dynamicContent.removeChild(link);
+    dynamicContent.removeChild(downloadButton);
+  });
+}

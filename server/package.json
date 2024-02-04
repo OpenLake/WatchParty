@@ -13,7 +13,9 @@
     "cors": "^2.8.5",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
-    "socket.io": "^4.4.0"
+    "socket.io": "^4.4.0",
+    "socket.io-file": "^2.0.31",
+    "socketio-file-upload": "^0.7.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
