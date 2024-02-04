@@ -101,7 +101,7 @@ console.log('targetRoomId' , targetRoomId) ;
     }
   }
 
-  // Start sending chunks , jab tak there are any chunks left 
+  // Start sending chunks , until there are any chunks left
   sendNextChunk();
 });
 
