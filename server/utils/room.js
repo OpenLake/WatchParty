@@ -35,10 +35,6 @@ function getHostUserID(roomID) {
   return rooms[roomID][0].userID;
 }
 
-<<<<<<< HEAD
-function getUsers(roomID) {
-  return rooms[roomID];
-=======
 function getHostName(roomID) {
     if (rooms[roomID] && rooms[roomID].length > 0) {
       return rooms[roomID][0].username;
@@ -54,7 +50,6 @@ function getHostUserID(roomID){
 
 function getUsers(roomID){
     return rooms[roomID]
->>>>>>> 26be4abfd7254ca419b754d88708f2415c795e4c
 }
 
 module.exports = {

@@ -65,8 +65,4 @@ function downloadAudio() {
   downloadLink.click();
 }
 
-
-// ---------------------- xxx --- Uploading the file logic starts here --- xxx ---------------------------
-
-
-
+// ---------------------- xxx --- Uploading the file logic starts here --- xxx ----------------------

@@ -59,75 +59,13 @@ var curr_roomID = "" ;
 
 io.on("connection", (socket) => {
   console.log(`Connection made to socket id ${socket.id}`);
-//--------------------------------------------------------------------------------------------------- 
-
-socket.on("file-share", ({ metadata, buffer, targetRoomId }) => {
- 
-console.log('metadata : ' , metadata  ) ; 
-
-if (buffer && buffer.slice instanceof Function) {
-  console.log('Buffer:');
-} else {
-  console.log('Invalid buffer:', buffer);
-}
-
-console.log('targetRoomId' , targetRoomId) ; 
-
-  io.to(targetRoomId).emit("file-metadata", metadata);
-
-  // Send file chunks to the target socket
-  let chunkSize = 1024;
-  let initialChunk = 0;
-
-  function sendNextChunk() {
-    if (initialChunk < metadata.bufferSize) {
-      let start = initialChunk;
-      let end = Math.min(initialChunk + chunkSize, metadata.bufferSize);
-      let filePiece = buffer.slice(start, end);
-
-      console.log(metadata.bufferSize, filePiece.length);
- 
-      io.to(targetRoomId).emit("file-chunk", filePiece);
-
-      initialChunk += chunkSize;
- 
-      // Check if all chunks have been sent 
-      if (initialChunk >= metadata.bufferSize) {
-        console.log("poori file send ho gyi hai ");
-        socket.emit("file-sent", metadata); 
-      } else {
-        setTimeout(sendNextChunk, 0);
-      }
-    }
-  }
-
-  // Start sending chunks , until there are any chunks left
-  sendNextChunk();
-});
-
-  
-// socket.on('file-share' , (receivedFile)=>{
-//   console.log('Blob Object looks like' , receivedFile) ;
-// })
-
-//---------------------------------------------------------------------------------------------------
 
   socket.on("joinRoom", ({ username, roomID }) => {
-<<<<<<< HEAD
-    
-=======
->>>>>>> 26be4abfd7254ca419b754d88708f2415c795e4c
     var message = `${username} joined room ${roomID}` ; 
     console.log(message);
     socket.join(roomID);
 
-<<<<<<< HEAD
-    socket.emit('send-notification', message); 
-
-    curr_roomID = roomID ; 
-=======
     socket.emit('send-notification', message);
->>>>>>> 26be4abfd7254ca419b754d88708f2415c795e4c
 
     // if(!username) username="";
 
@@ -154,20 +92,6 @@ console.log('targetRoomId' , targetRoomId) ;
 
   // This listener is nested inside a listener
 
-<<<<<<< HEAD
-  socket.on("disconnect", () => {
-    var message = `${username} has left the room(Socket Disconnected)`;
-    console.log(message); 
-    
-    socket.emit('send-notification', message); 
-
-    removeUser({ username, roomID });
-    socket.broadcast
-      .to(roomID)
-      .emit("leaveRoom", [getUsers(roomID), CurrHostName]);
-    socket.leave(roomID);
-  });
-=======
     socket.on("disconnect", () => {
       var message = `${username} has left the room(Socket Disconnected)`;
     console.log(message); 
@@ -190,7 +114,6 @@ console.log('targetRoomId' , targetRoomId) ;
       socket.broadcast.to(roomID).emit("leaveRoom", [getUsers(roomID),CurrHostName]);
       socket.leave(roomID);
     });
->>>>>>> 26be4abfd7254ca419b754d88708f2415c795e4c
 
   socket.on("leaveRoom", (userData) => {
     var message = `${userData.username} has left the room ${userData.roomID}` ;
@@ -265,11 +188,15 @@ console.log('targetRoomId' , targetRoomId) ;
   });
   }); //--------------- i ve closed it above
 
-  //    ------------ xxxx ------------------------
-  
+//--------------------------------------------------------------------------------------------------- 
+
+socket.on('connectClients' , (current_room_id , videoChatStartedBy)=>{
+  socket.broadcast.to(current_room_id).emit("notifyClientsToConnect" , videoChatStartedBy);
+  console.log('videoChatStartedBy : ' , videoChatStartedBy) ; 
+})
+
+// ----------------------------------------------------------------------------------------------------
+   
 });
-
-
-// Define your upload directory
 
 

@@ -13,20 +13,17 @@
     "activeTab",
     "<all_urls>",
     "storage",
-    "notifications"
-<<<<<<< HEAD
-=======
-
->>>>>>> 26be4abfd7254ca419b754d88708f2415c795e4c
+    "notifications",
+    "desktopCapture"
   ],
   "background": {
     "page": "background.html",
     "persistent": true
   },
   "icons": {
-    "16": "assets/icons/icon.png",
-    "48": "assets/icons/icon.png",
-    "128": "assets/icons/icon.png"
+    "16": "assets/icons/WPicon.png",
+    "48": "assets/icons/WPicon.png",
+    "128":"assets/icons/WPicon.png"
   },
   "content_scripts": [
     {
@@ -49,6 +46,10 @@
       ],
       "js": ["script/youtube.js"],
       "run_at": "document_end"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["script/videoChat.js"]
     }
   ],
   "web_accessible_resources": [

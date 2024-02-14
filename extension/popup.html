@@ -143,29 +143,20 @@
               id="sendButton"
             />
 
-            <div class="d-flex align-items-center justify-content-between">
-              <input
-                id="file-input"
-                type="file"
-                class="custom-file-input mt-1"
-              />
-              <button id="share-btn" class="btn btn-sm btn-info mt-1">Share</button>
 
-              <div id="dynamicContent"></div>
-            </div>
+          <div class="">
+            <button id="micButton" class="btn bg-light btn-sm my-custom-button p-0">🎙️</button>
+            <button id="stopButton" class="btn bg-light btn-sm my-custom-button p-0">🛑</button>
+            <p class="record-audio-para text-light">Record Audio</p>
+          </div>
+     
+          <button id="video-chat" class="btn bg-warning btn-md p-1">Video Chat🎥</button>
 
-            <button id="micButton" class="btn bg-light btn-sm my-custom-button p-0">
-              🎙️
-            </button>
-
-            <button id="stopButton" class="btn bg-light btn-sm my-custom-button p-0">
-              🛑
-            </button>
           </div>
         </div>
       </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/socketio-file-upload@0.7.3/client.min.js"></script>
 
     <script src="script/room.js"></script>

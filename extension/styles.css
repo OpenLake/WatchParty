@@ -258,9 +258,9 @@ body {
 }
 
 /* ------------------------  */
-#micButton {
+/* #micButton {
   margin-left: 9rem;
-}
+} */
 
 .my-custom-button {
   margin: 5px;
@@ -288,4 +288,22 @@ body {
   font-size: 10px;
   color: rgb(3, 96, 13);
   background: rgb(72, 224, 95);
+}
+
+#video-chat{
+font-size: small;
+border: none;
+padding-right: 1px;
+padding-left: 1px;
+margin-left: 3% ;
+margin-top: 6%;
+text-shadow: 1px 1px 3px black ;
+font-family: Montserrat , serif;
+color: white;
+}
+.record-audio-para{
+  font-size: x-small;
+  margin-left: 2%;
+  text-shadow: 1px 1px black ;
+  font-family: Montserrat , serif;
 }

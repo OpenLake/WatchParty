@@ -12,6 +12,7 @@ const stopButton = document.getElementById("stopButton");
 const fileInputElement = document.getElementById("file-input");
 const shareButton = document.getElementById("share-btn");
 const dynamicContent= document.getElementById('dynamicContent'); 
+const videoChat = document.getElementById('video-chat'); 
 
 var usersHTML = "";
 var chatHTML = "";
@@ -200,102 +201,9 @@ chrome.runtime.onMessage.addListener(function (
   }
 });
 
-//------------------------------------------------------------------------------------------------------
- 
-shareButton.addEventListener("click", async () => {
+// ------------ Video Chat/Screen Sharing , with peer.js library ---------
 
-  if (fileInputElement.files.length === 0) {
-    alert("Choose the file you want to send 📁");
-    return;
-  }
+videoChat.addEventListener('click',()=>{
+  chrome.runtime.sendMessage({event : 'startVideoChat'}); 
+})
 
-  let file = fileInputElement.files[0];
-  let reader = new FileReader(); 
-
-  reader.onload = () => {
-    let buffer = new Uint8Array(reader.result);
-
-    console.log(buffer); 
-
-    initFileShare({ filename: file.name, bufferSize: buffer.length }, buffer);
-  };
-
-  reader.readAsArrayBuffer(file);
-});
-
-// function initFileShare(metadata, buffer) {
-//   const bufferArray = Array.from(buffer);
-//   chrome.runtime.sendMessage({ event: "file-share", metadata, bufferArray});
-// }
-
-
-function initFileShare(metadata, buffer) {
-  console.log('Initiating file share...');
-  
-  const bufferArray = Array.from(buffer);
-
-  navigator.serviceWorker.ready
-    .then((registration) => {
-      console.log('Service Worker is ready.');
-
-      if (registration.active) {
-        console.log('Posting message to service worker...');
-
-        registration.active.postMessage({
-          event: "file-share",
-          metadata,
-          bufferArray,
-        });
-      } else {
-        console.error('No active service worker found.');
-      }
-    })
-    .catch((error) => {
-      console.error("Service Worker registration failed:", error);
-    });
-}
- 
-
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.event === "downloadFile") {
-    console.log('download file . . . .') ; 
-
-    const { buffer, filename } = message;
-
-    console.log('Received file :', buffer);
-
-    if (!(buffer instanceof Blob)) {
-      console.error('Invalid blob object:', buffer);
-      return;
-    }
-
-    // downloadFile(buffer, filename);
-  }
-});
-
-function downloadFile(blob, name = "shared.txt") {
-  const blobUrl = URL.createObjectURL(blob);
-
-  const downloadButton = document.createElement("button");
-  dynamicContent.appendChild(downloadButton);
-
-  downloadButton.innerText = "Download File 📥";
-
-  downloadButton.addEventListener("click", () => {
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.download = name;
-    dynamicContent.appendChild(link);
-
-    link.dispatchEvent(
-      new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      })
-    );
-
-    dynamicContent.removeChild(link);
-    dynamicContent.removeChild(downloadButton);
-  });
-}

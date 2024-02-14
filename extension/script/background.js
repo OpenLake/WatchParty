@@ -132,8 +132,8 @@ chrome.runtime.onMessage.addListener(function (
     });
   } else if (message.event === "file-share") {
     const buffer = new Uint8Array(message.buffer);
-    console.log(`emitting file-share event with buffer : `, buffer); 
-    
+    console.log(`emitting file-share event with buffer : `, buffer);
+
     socket.emit("file-share", {
       metadata: message.metadata,
       buffer: buffer,
@@ -225,6 +225,21 @@ socket.on("sendMessage", (data) => {
   chatData.push({ username: username, message: message });
   chrome.runtime.sendMessage({ event: "sendMessage", data: chatData });
 });
+
+socket.on("send-notification", (data) => {
+  console.log(data);
+  showNotification(data);
+});
+
+function showNotification(message) {
+    chrome.notifications.create({
+      type: "basic",
+      iconUrl: "../assets/icons/WPicon.png",
+      title: "Room Notification",
+      message: message,
+    });
+}
+
 socket.on("send-notification", (data) => {
   console.log(data);
   showNotification(data);
@@ -239,133 +254,90 @@ socket.on("send-notification", (data) => {
   }
 });
 
-socket.on("send-notification", (data) => {
-  console.log(data);
-  showNotification(data);
 
-  function showNotification(message) {
-    chrome.notifications.create({
-      type: "basic",
-      iconUrl: "../assets/icons/WPicon.png",
-      title: "Room Notification",
-      message: message,
-    });
-  }
-});
+// -------------------- Video-Chat/Screen Sharing : with peer.js library -------------------- :
 
-socket.on("file-sent", (metadata) => {
-  console.log("File successfully sent:", metadata);
-  alert("Yayy! File sent 🎉");
-});
+const openVideoChatTab = async(message , userData)=>{
+  await chrome.tabs.query(
+    { active: true, lastFocusedWindow: true, currentWindow: true },
+    async function (tabs) {
+      const currentTab = tabs[0];
 
-window.addEventListener("load", () => {
-  console.log("New instance for newFile created");
+      await chrome.tabs.create(
+        {
+          url: chrome.runtime.getURL("videoChat.html"),
+          pinned: true,
+          active: true,
+        },
+        (tab) => {
+          console.log(tab);
 
-  let newFile = {
-    buffer: [],
-    metadata: null,
-  };
+          chrome.tabs.onUpdated.addListener(async function listener(tabId,info) {
+            console.log(tabId);
 
-  socket.on("file-metadata", (metadata) => {
-    newFile.metadata = metadata;
-    newFile.buffer = [];
+            if (tabId === tab.id && info.status === "complete") {
+              chrome.tabs.onUpdated.removeListener(listener);
 
-    console.log("received metadata ⚡️", metadata);
-  });
-
-  socket.on("file-sent", (metadata) => {
-    console.log("File successfully sent:", metadata);
-    alert("Yayy! File sent 🎉");
-  });
-
-  socket.on("file-chunk", (chunk) => {
-    let chunkSize = 1024;
-
-    newFile.buffer.push(chunk);
-    console.log(newFile.buffer);
-
-    if (newFile.metadata) {
-      console.log(
-        "Buffer size and metadata buffer size:",
-        newFile.buffer.length,
-        newFile.metadata.bufferSize
+              chrome.tabs.sendMessage(tab.id, {event : message , roomId : curr_roomID });
+            }
+          });
+        }
       );
+    }
+  );
+}
 
-      if (newFile.buffer.length * chunkSize >= newFile.metadata.bufferSize) {
-        console.log("All chunks received. Initiating download...");
-        console.log("Received buffer size:", newFile.buffer.length);
+chrome.runtime.onMessage.addListener(async (message) => {
+  if (message.event === "startVideoChat") {
 
-        let receivedFile = new Blob(newFile.buffer);
+    if(curr_roomID === null) {
+      alert('Please Join a room first .'); 
+      return ; 
+    }
+    console.log("roomID : ", curr_roomID);
 
-        console.log("receivedFile", receivedFile);
+    openVideoChatTab('createRoomForVideoChat' , userData ) ; 
+  }
+  else if(message.event === 'connectClients'){
+    console.log('connecting clients kyunki videoScript ne bola hai ') ; 
+    socket.emit("connectClients" , curr_roomID , userData.username ) ;
+  }
+  else if(message.event === 'userJoinedVideoChat'){
+    showNotification(`You've Joined the Video Chat !`) ; 
+  }
+});
 
-        chrome.runtime.sendMessage({
-          event: "downloadFile",
-          buffer: receivedFile,
-          filename: newFile.metadata.filename,
-        });
+socket.on('notifyClientsToConnect',(videoChatStartedBy)=>{
 
-        newFile = {};
-        alert("Yayy! File received 🎉");
+  var notificationId ; 
+
+  chrome.notifications.create({
+    type: 'basic',
+    iconUrl: '../assets/icons/WPicon.png',
+    title: 'Watchparty Notification',
+    requireInteraction : true, 
+    message: `${videoChatStartedBy} started a Video Chat / Screen Streaming , do u want to join ?`, 
+    buttons: [
+      { title: 'Yes, Sure' },
+      { title: 'No' }
+    ],
+  }, (id) => {
+    // console.log('Notification created:', id);
+    notificationId = id ; 
+  });
+  
+  chrome.notifications.onButtonClicked.addListener((id, buttonIndex) => {
+    if (notificationId === id ) {
+      if (buttonIndex === 0) {
+        console.log('User clicked Yes, Sure. ');
+
+        openVideoChatTab('joinVideoChat') ; 
+
+      } else if (buttonIndex === 1) {
+        console.log('User clicked No.');
       }
     }
   });
 
-  function downloadFile(blob, name = "shared.txt") {
-    alert("Do u wanna download the file ?");
-
-    console.log("blob from download function : ", blob);
-
-    const blobUrl = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.download = name;
-
-    link.dispatchEvent(
-      new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      })
-    );
-  }
-});
-
-
-
-const workerScript = "script/service-worker.js";
-
-// navigator.serviceWorker.register(workerScript);
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('script/service-worker.js')
-    .then((registration) => {
-      console.log('Service Worker registered with scope:', registration.scope);
-    })
-    .catch((error) => {
-      console.error('Service Worker registration failed:', error);
-    });
-    
-    navigator.serviceWorker.addEventListener("message", (event) => {
-      const message = event.data;
-      console.log('Received a simple message in background:', message.data);
-    });
-}
-
-// navigator.serviceWorker.addEventListener("message", (event) => {
-//   const message = event.data;
-
-//   if (message.event === "file-share") {
-//     alert('Navigator se message mila'); 
-
-//     const buffer = new Uint8Array(message.buffer);
-//     console.log(`Navigator.sw : emitting file-share event with buffer : `,buffer); 
-
-//     socket.emit("file-share", {
-//       metadata: message.metadata,
-//       buffer: buffer,
-//       targetRoomId: curr_roomID,
-//     });
-//   }
-// });
+})
 
