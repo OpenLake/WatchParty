@@ -13,17 +13,17 @@
     "activeTab",
     "<all_urls>",
     "storage",
-    "notifications"
-
+    "notifications",
+    "desktopCapture"
   ],
   "background": {
     "page": "background.html",
     "persistent": true
   },
   "icons": {
-    "16": "assets/icons/icon.png",
-    "48": "assets/icons/icon.png",
-    "128": "assets/icons/icon.png"
+    "16": "assets/icons/WPicon.png",
+    "48": "assets/icons/WPicon.png",
+    "128":"assets/icons/WPicon.png"
   },
   "content_scripts": [
     {
@@ -46,6 +46,10 @@
       ],
       "js": ["script/youtube.js"],
       "run_at": "document_end"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["script/videoChat.js"]
     }
   ],
   "web_accessible_resources": [
@@ -54,5 +58,5 @@
     "getDuration_hotstar.js"
   ],
 
-  "content_security_policy": "script-src 'self' https://cdn.socket.io https://unpkg.com/mic-recorder-to-mp3@2.2.1; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://cdn.socket.io https://unpkg.com/mic-recorder-to-mp3@2.2.1 https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; object-src 'self'"
 }

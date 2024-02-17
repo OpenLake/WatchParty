@@ -7,6 +7,8 @@ const { Server } = require("socket.io");
 const { createServer } = require("node:http");
 const app = express();
 const server = createServer(app);
+const SocketIOFileUpload = require('socketio-file-upload');
+
 
 const {
   addUser,
@@ -31,6 +33,9 @@ app.use(
 
 // app.use(cors());
 
+const uploadDir = 'C:/Users/Hp/Desktop/Save_file' ; 
+app.use(express.static(uploadDir));
+
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
@@ -47,10 +52,10 @@ app.get("/hello", (req, res) => {
   res.send("Hello");
 });
 
-
 // Empty string representing No Host yet
 var CurrHostName = "";
 var CurrHostUserID = "";
+var curr_roomID = "" ; 
 
 io.on("connection", (socket) => {
   console.log(`Connection made to socket id ${socket.id}`);
@@ -83,7 +88,7 @@ io.on("connection", (socket) => {
     console.log(`curent Host in room ${roomID} is ${CurrHostName}`);
 
     io.to(CurrHostUserID).emit("hostName", CurrHostUserID);
-  }); //-----------------
+  // }); //-----------closed it here  ------
 
   // This listener is nested inside a listener
 
@@ -110,62 +115,88 @@ io.on("connection", (socket) => {
       socket.leave(roomID);
     });
 
-    // Only host can sync video
-    // socket Youtube
-    socket.on("syncYoutube", (data) => {
-      userData = data[0];
-      media = data[1];
-      duration = media[0];
-      isPaused = media[1];
-      console.log(
-        `Youtube sync request from ${
-          userData.username
-        } while media is running ${!media[1]}`
-      );
-      if (CurrHostName === userData.username) {
-        socket.broadcast.to(roomID).emit("syncYoutube", [duration, isPaused]);
-      }
-    });
-    // socket Netflix
-    socket.on("syncNetflix", (data) => {
-      userData = data[0];
-      media = data[1];
-      duration = media[0];
-      isPaused = media[1];
-      console.log(
-        `Netflix sync request from ${
-          userData.username
-        } while media is running ${!media[1]}`
-      );
-      if (CurrHostName === userData.username) {
-        socket.broadcast.to(roomID).emit("syncNetflix", [duration, isPaused]);
-      }
-    });
-    // socket Hotstar
-    socket.on("syncHotstar", (data) => {
-      userData = data[0];
-      media = data[1];
-      duration = media[0];
-      isPaused = media[1];
-      console.log(
-        `Hotstar sync request from ${
-          userData.username
-        } while media is running ${!media[1]}`
-      );
-      if (CurrHostName === userData.username) {
-        socket.broadcast.to(roomID).emit("syncHotstar", [duration, isPaused]);
-      }
-    });
-    socket.on("sendMessage", (data) => {
-      username = data.userData.username;
-      roomID = data.userData.roomID;
-      message = data.message;
+  socket.on("leaveRoom", (userData) => {
+    var message = `${userData.username} has left the room ${userData.roomID}` ;
 
-      console.log(`${username} says ${message} in room ${roomID}`);
-      socket.broadcast
-        .to(roomID)
-        .emit("sendMessage", { username: username, message: message });
-    });
-  // }); //--------------- i ve closed it above
+    socket.emit('send-notification', message); 
+
+    removeUser(userData);
+    if (userData.username == CurrHostName) {
+      CurrHostName = getHostName(roomID);
+    }
+    socket.broadcast
+      .to(roomID)
+      .emit("leaveRoom", [getUsers(roomID), CurrHostName]);
+    socket.leave(roomID);
+  });
+
+  // Only host can sync video
+  // socket Youtube
+  socket.on("syncYoutube", (data) => {
+    userData = data[0];
+    media = data[1];
+    duration = media[0];
+    isPaused = media[1];
+    console.log(
+      `Youtube sync request from ${
+        userData.username
+      } while media is running ${!media[1]}`
+    );
+    if (CurrHostName === userData.username) {
+      socket.broadcast.to(roomID).emit("syncYoutube", [duration, isPaused]);
+    }
+  });
+  // socket Netflix
+  socket.on("syncNetflix", (data) => {
+    userData = data[0];
+    media = data[1];
+    duration = media[0];
+    isPaused = media[1];
+    console.log(
+      `Netflix sync request from ${
+        userData.username
+      } while media is running ${!media[1]}`
+    );
+    if (CurrHostName === userData.username) {
+      socket.broadcast.to(roomID).emit("syncNetflix", [duration, isPaused]);
+    }
+  });
+  // socket Hotstar
+  socket.on("syncHotstar", (data) => {
+    userData = data[0];
+    media = data[1];
+    duration = media[0];
+    isPaused = media[1];
+    console.log(
+      `Hotstar sync request from ${
+        userData.username
+      } while media is running ${!media[1]}`
+    );
+    if (CurrHostName === userData.username) {
+      socket.broadcast.to(roomID).emit("syncHotstar", [duration, isPaused]);
+    }
+  });
+  socket.on("sendMessage", (data) => {
+    username = data.userData.username;
+    roomID = data.userData.roomID;
+    message = data.message;
+
+    console.log(`${username} says ${message} in room ${roomID}`);
+    socket.broadcast
+      .to(roomID)
+      .emit("sendMessage", { username: username, message: message });
+  });
+  }); //--------------- i ve closed it above
+
+//--------------------------------------------------------------------------------------------------- 
+
+socket.on('connectClients' , (current_room_id , videoChatStartedBy)=>{
+  socket.broadcast.to(current_room_id).emit("notifyClientsToConnect" , videoChatStartedBy);
+  console.log('videoChatStartedBy : ' , videoChatStartedBy) ; 
+})
+
+// ----------------------------------------------------------------------------------------------------
+   
 });
+
 

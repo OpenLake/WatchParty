@@ -1,20 +1,21 @@
 // Background script for youtube
 
-// async function Alive(time) {
-//   console.log("service worker is running");
-//   setTimeout(() => Alive(time), time);
-// }
+async function Alive(time) {
+  console.log("service worker is running");
+  setTimeout(() => Alive(time), time);
+}
 
-// Alive(60 * 1000);
+Alive(60 * 1000);
 
 var socket = io.connect("http://localhost:4000");
 //var socket = io.connect('https://watchpartyserver.herokuapp.com/')
 
-var existingConnection = false ;
+var existingConnection = false;
 var userData = {};
 var user_list = {};
 var chatData = [];
 var CurrHostName = "";
+var curr_roomID = null;
 
 // function for checking socket status
 function checkStatus() {
@@ -25,17 +26,14 @@ function checkStatus() {
   }
 }
 
-
-
 chrome.runtime.onMessage.addListener(function (
   message,
   sender,
   senderResponse
 ) {
   if (message.event === "joinRoom") {
-
-    console.log("JoinRoom event is being listened in bg.js ") ;
-    // alert('event received' ) ; 
+    console.log("JoinRoom event is being listened in bg.js ");
+    // alert('event received' ) ;
     checkStatus();
 
     if (existingConnection) {
@@ -47,7 +45,9 @@ chrome.runtime.onMessage.addListener(function (
         roomID: message.data.roomID,
       };
 
-      console.log("socket.emit(joinRoom) from bg.js line 37") ; 
+      curr_roomID = userData.roomID;
+
+      console.log("socket.emit(joinRoom) from bg.js line 37");
 
       socket.emit("joinRoom", userData);
     }
@@ -109,28 +109,41 @@ chrome.runtime.onMessage.addListener(function (
         socket.emit("syncNetflix", [userData, [time, isPaused]]);
       }
     );
-  }else if(message.event === 'startRecording'){ 
-      console.log('executing contentScript . . . '); 
-      chrome.tabs.executeScript({
-        file: './script/contentScript.js'
-      });
+  } else if (message.event === "startRecording") {
+    console.log("executing contentScript . . . ");
+    chrome.tabs.executeScript({
+      file: "./script/contentScript.js",
+    });
 
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {greeting: "hello"}, function(response) {
-        });
-      });
-    }
-    else if(message.event === 'stopRecording'){
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {greeting: "stopRecording"}, function(response) {
-        });
-      });
-    }
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { greeting: "hello" },
+        function (response) {}
+      );
+    });
+  } else if (message.event === "stopRecording") {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { greeting: "stopRecording" },
+        function (response) {}
+      );
+    });
+  } else if (message.event === "file-share") {
+    const buffer = new Uint8Array(message.buffer);
+    console.log(`emitting file-share event with buffer : `, buffer);
+
+    socket.emit("file-share", {
+      metadata: message.metadata,
+      buffer: buffer,
+      targetRoomId: curr_roomID,
+    });
+  }
 });
 
 socket.on("joinRoom", (data) => {
-
-  console.log('socket receives joinRoom bg.js 106');
+  console.log("socket receives joinRoom bg.js 106");
 
   CurrHostName = data[1];
   console.log(`current host: ${CurrHostName}`);
@@ -212,6 +225,21 @@ socket.on("sendMessage", (data) => {
   chatData.push({ username: username, message: message });
   chrome.runtime.sendMessage({ event: "sendMessage", data: chatData });
 });
+
+socket.on("send-notification", (data) => {
+  console.log(data);
+  showNotification(data);
+});
+
+function showNotification(message) {
+    chrome.notifications.create({
+      type: "basic",
+      iconUrl: "../assets/icons/WPicon.png",
+      title: "Room Notification",
+      message: message,
+    });
+}
+
 socket.on("send-notification", (data) => {
   console.log(data);
   showNotification(data);
@@ -226,4 +254,90 @@ socket.on("send-notification", (data) => {
   }
 });
 
+
+// -------------------- Video-Chat/Screen Sharing : with peer.js library -------------------- :
+
+const openVideoChatTab = async(message , userData)=>{
+  await chrome.tabs.query(
+    { active: true, lastFocusedWindow: true, currentWindow: true },
+    async function (tabs) {
+      const currentTab = tabs[0];
+
+      await chrome.tabs.create(
+        {
+          url: chrome.runtime.getURL("videoChat.html"),
+          pinned: true,
+          active: true,
+        },
+        (tab) => {
+          console.log(tab);
+
+          chrome.tabs.onUpdated.addListener(async function listener(tabId,info) {
+            console.log(tabId);
+
+            if (tabId === tab.id && info.status === "complete") {
+              chrome.tabs.onUpdated.removeListener(listener);
+
+              chrome.tabs.sendMessage(tab.id, {event : message , roomId : curr_roomID });
+            }
+          });
+        }
+      );
+    }
+  );
+}
+
+chrome.runtime.onMessage.addListener(async (message) => {
+  if (message.event === "startVideoChat") {
+
+    if(curr_roomID === null) {
+      alert('Please Join a room first .'); 
+      return ; 
+    }
+    console.log("roomID : ", curr_roomID);
+
+    openVideoChatTab('createRoomForVideoChat' , userData ) ; 
+  }
+  else if(message.event === 'connectClients'){
+    console.log('connecting clients kyunki videoScript ne bola hai ') ; 
+    socket.emit("connectClients" , curr_roomID , userData.username ) ;
+  }
+  else if(message.event === 'userJoinedVideoChat'){
+    showNotification(`You've Joined the Video Chat !`) ; 
+  }
+});
+
+socket.on('notifyClientsToConnect',(videoChatStartedBy)=>{
+
+  var notificationId ; 
+
+  chrome.notifications.create({
+    type: 'basic',
+    iconUrl: '../assets/icons/WPicon.png',
+    title: 'Watchparty Notification',
+    requireInteraction : true, 
+    message: `${videoChatStartedBy} started a Video Chat / Screen Streaming , do u want to join ?`, 
+    buttons: [
+      { title: 'Yes, Sure' },
+      { title: 'No' }
+    ],
+  }, (id) => {
+    // console.log('Notification created:', id);
+    notificationId = id ; 
+  });
+  
+  chrome.notifications.onButtonClicked.addListener((id, buttonIndex) => {
+    if (notificationId === id ) {
+      if (buttonIndex === 0) {
+        console.log('User clicked Yes, Sure. ');
+
+        openVideoChatTab('joinVideoChat') ; 
+
+      } else if (buttonIndex === 1) {
+        console.log('User clicked No.');
+      }
+    }
+  });
+
+})
 

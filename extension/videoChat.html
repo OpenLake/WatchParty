@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>WatchParty - Video Meet</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" type="text/css" href="videoChatStyles.css" />
+  </head>
+
+  <body class="bg-light">
+    <h1 class="title display-4 text-center mb-4">WatchParty - Video Meet</h1>
+    <p id="notification"  class="alert alert-info text-center" hidden></p>
+
+    <div class="entry-modal p-3" id="entry-modal">
+      <p class="mb-2 text-black">Create or Join Meeting</p>
+      <input id="room-input" class="room-input form-control room-input mb-3" placeholder="Enter Room ID" />
+      <div>
+        <button id="createRoom" class="btn btn-primary btn-block">Create Room</button>
+        <button id="joinRoom" class="btn btn-success btn-block">Join Room</button>
+      </div>
+    </div>
+    <div class="meet-area">
+      <!-- Remote Video Element-->
+      
+      <video id="remote-video"></video>
+     
+
+      <!-- Local Video Element-->
+      <video id="local-video">My Video</video>
+
+      <div class="meet-controls-bar bg-light">
+        <button id="startScreenShare" class="btn btn-info"> Screen Share</button>
+      </div>
+    </div>
+  </body>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js" integrity="sha512-o/HHmG8jeysxAxgj7HH5ZZnXOwWYS7D9oGVJH+TdRIpEYj01/m9Dm26vmcOtfhou2QbzPXFdnewbEp6v9I0U0g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="script/videoChat.js"></script>
+</html>

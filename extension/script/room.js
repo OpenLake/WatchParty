@@ -9,6 +9,11 @@ const sendButton = document.getElementById("sendButton");
 const micButton = document.getElementById("micButton");
 const stopButton = document.getElementById("stopButton");
 
+const fileInputElement = document.getElementById("file-input");
+const shareButton = document.getElementById("share-btn");
+const dynamicContent= document.getElementById('dynamicContent'); 
+const videoChat = document.getElementById('video-chat'); 
+
 var usersHTML = "";
 var chatHTML = "";
 var chatboxshow = 0;
@@ -31,9 +36,9 @@ micButton.addEventListener("click", () => {
   chrome.runtime.sendMessage({ event: "startRecording" });
 });
 
-stopButton.addEventListener('click',()=>{
-  chrome.runtime.sendMessage({event : 'stopRecording'});
-}); 
+stopButton.addEventListener("click", () => {
+  chrome.runtime.sendMessage({ event: "stopRecording" });
+});
 
 // Event listeners for popup buttons.
 button.addEventListener("click", () => {
@@ -196,52 +201,9 @@ chrome.runtime.onMessage.addListener(function (
   }
 });
 
-//------------------------------------------------------------------------------------------------------
+// ------------ Video Chat/Screen Sharing , with peer.js library ---------
 
+videoChat.addEventListener('click',()=>{
+  chrome.runtime.sendMessage({event : 'startVideoChat'}); 
+})
 
-// let isRecording = false;
-// micButton.addEventListener("click", function () {
-//   if (!isRecording) {
-//     chrome.runtime.sendMessage({
-//       event: "startRecording",
-//       data: { username: username.value, roomID: roomID.value },
-//     });
-//     micButton.textContent = "🔴 Stop";
-//     isRecording = !isRecording;
-//   } else {
-//     chrome.runtime.sendMessage({
-//       event: "stopRecording",
-//       data: { username: username.value, roomID: roomID.value },
-//     });
-//     micButton.textContent = "🎙️ Mic";
-//     isRecording = !isRecording;
-//   }
-// });
-
-
-// function updateMicButton(eventTrigger) {
-//   chrome.storage.local.get(["isRecording"], function (result) {
-//     let isRecording = result.isRecording !== undefined ? result.isRecording : false;
-//     console.log("isRecording " + isRecording);
-
-//     if (isRecording) {
-//       micButton.innerText = "Stop";
-//       chrome.storage.local.set({ isRecording: false });
-
-//       if(eventTrigger==true){
-//       console.log('trigerring event stop recording');
-//       chrome.runtime.sendMessage({event : 'stopRecording'});
-//       }
-
-//     } else {
-//       micButton.innerText = "Start";
-//       chrome.storage.local.set({ isRecording: true });
-
-//       if(eventTrigger==true){
-//         console.log('trigerring event start recording');
-//       chrome.runtime.sendMessage({ event: "startRecording" });
-//       }
-//     }
-//   });
-// }
-// updateMicButton(false);
